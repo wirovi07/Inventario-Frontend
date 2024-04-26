@@ -21,6 +21,12 @@ export default [
   },
   {
     component: 'CNavItem',
+    name: 'Empoys',
+    to: '/empoys',
+    icon: 'cil-people',
+  },
+  {
+    component: 'CNavItem',
     name: 'Typography',
     to: '/theme/typography',
     icon: 'cil-pencil',
