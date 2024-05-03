@@ -19,7 +19,9 @@
                       <CFormInput placeholder="Tipo Documento" type="text" tabindex="1"  />
                     </CInputGroup>
                     <CInputGroup class="mb-3">
-                      <CInputGroupText>@</CInputGroupText>
+                      <CInputGroupText>
+                        <CIcon icon="cil-contact"/>
+                      </CInputGroupText>
                       <CFormInput placeholder="Nombres" type="text" tabindex="3"  />
                     </CInputGroup>
                     <CInputGroup class="mb-3">
@@ -30,7 +32,7 @@
                     </CInputGroup>
                     <CInputGroup class="mb-4">
                       <CInputGroupText>
-                        <CIcon icon="cil-lock-locked" />
+                        <CIcon icon="cil-phone"/>
                       </CInputGroupText>
                       <CFormInput placeholder="Telefono" type="text" tabindex="7" />
                     </CInputGroup>
@@ -49,22 +51,26 @@
                       <CFormInput placeholder="Documento" type="text" tabindex="2" />
                     </CInputGroup>
                     <CInputGroup class="mb-3">
-                      <CInputGroupText>@</CInputGroupText>
+                      <CInputGroupText>
+                        <CIcon icon="cil-contact"/>
+                      </CInputGroupText>
                       <CFormInput placeholder="Apellido" type="text" tabindex="4"  />
                     </CInputGroup>
                     <CInputGroup class="mb-3">
                       <CInputGroupText>
-                        <CIcon icon="cil-lock-locked" />
+                        <CIcon icon="cil-address-book" />
                       </CInputGroupText>
                       <CFormInput placeholder="Dirección" type="text" tabindex="6"  />
                     </CInputGroup>
                     <CInputGroup class="mb-4">
-                      <CInputGroupText>@</CInputGroupText>
+                      <CInputGroupText>
+                        <CIcon icon="cil-at"/>
+                      </CInputGroupText>
                       <CFormInput placeholder="Email" type="email" tabindex="8" />
                     </CInputGroup>
                     <CInputGroup class="mb-4">
                       <CInputGroupText>
-                        <CIcon icon="cil-lock-locked" />
+                        <CIcon icon="cil-lock-unlocked" />
                       </CInputGroupText>
                       <CFormInput type="password" placeholder="Confirmar contraseña" tabindex="10"  />
                     </CInputGroup>
