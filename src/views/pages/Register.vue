@@ -6,31 +6,39 @@
           <CCard class="mx-4">
             <CCardBody class="p-4">
               <CForm>
-                <h1>Register</h1>
-                <a class="text-primary text-body-secondary text-decoration-none fs-6 fw-bold">Crea tu cuenta!</a>
+                <h1 class="text-center display-1 fw-semibold">Register</h1>
+                <div class="text-center">
+                    <a class="text-primary text-body-secondary text-decoration-none fs-6 fw-bold">Crea tu cuenta!</a>
+                </div>
                 <div class="row mt-4">
                   <div class="col-md-6">
                     <CInputGroup class="mb-3">
                       <CInputGroupText>
-                        <CIcon icon="cil-user" />
+                        <CIcon icon="cil-description" />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autocomplete="username" />
+                      <CFormInput placeholder="Tipo Documento" type="text" tabindex="1"  />
                     </CInputGroup>
                     <CInputGroup class="mb-3">
                       <CInputGroupText>@</CInputGroupText>
-                      <CFormInput placeholder="Email" autocomplete="email" />
+                      <CFormInput placeholder="Nombres" type="text" tabindex="3"  />
                     </CInputGroup>
                     <CInputGroup class="mb-3">
                       <CInputGroupText>
-                        <CIcon icon="cil-lock-locked" />
+                        <CIcon icon="cil-wc" />
                       </CInputGroupText>
-                      <CFormInput type="password" placeholder="Password" autocomplete="new-password" />
+                      <CFormInput placeholder="Sexo" type="text" tabindex="5"  />
                     </CInputGroup>
                     <CInputGroup class="mb-4">
                       <CInputGroupText>
                         <CIcon icon="cil-lock-locked" />
                       </CInputGroupText>
-                      <CFormInput type="password" placeholder="Repeat password" autocomplete="new-password" />
+                      <CFormInput placeholder="Telefono" type="text" tabindex="7" />
+                    </CInputGroup>
+                    <CInputGroup class="mb-4">
+                      <CInputGroupText>
+                        <CIcon icon="cil-lock-locked" />
+                      </CInputGroupText>
+                      <CFormInput type="password" placeholder="Contraseña" tabindex="9" />
                     </CInputGroup>
                   </div>
                   <div class="col-md-6">
@@ -38,23 +46,27 @@
                       <CInputGroupText>
                         <CIcon icon="cil-user" />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autocomplete="username" />
+                      <CFormInput placeholder="Documento" type="text" tabindex="2" />
                     </CInputGroup>
                     <CInputGroup class="mb-3">
                       <CInputGroupText>@</CInputGroupText>
-                      <CFormInput placeholder="Email" autocomplete="email" />
+                      <CFormInput placeholder="Apellido" type="text" tabindex="4"  />
                     </CInputGroup>
                     <CInputGroup class="mb-3">
                       <CInputGroupText>
                         <CIcon icon="cil-lock-locked" />
                       </CInputGroupText>
-                      <CFormInput type="password" placeholder="Password" autocomplete="new-password" />
+                      <CFormInput placeholder="Dirección" type="text" tabindex="6"  />
+                    </CInputGroup>
+                    <CInputGroup class="mb-4">
+                      <CInputGroupText>@</CInputGroupText>
+                      <CFormInput placeholder="Email" type="email" tabindex="8" />
                     </CInputGroup>
                     <CInputGroup class="mb-4">
                       <CInputGroupText>
                         <CIcon icon="cil-lock-locked" />
                       </CInputGroupText>
-                      <CFormInput type="password" placeholder="Repeat password" autocomplete="new-password" />
+                      <CFormInput type="password" placeholder="Confirmar contraseña" tabindex="10"  />
                     </CInputGroup>
                   </div>
                 </div>
