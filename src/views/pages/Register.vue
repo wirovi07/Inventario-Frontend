@@ -6,9 +6,9 @@
           <CCard class="mx-4">
             <CCardBody class="p-4">
               <CForm>
-                <h1 class="text-center display-1 fw-semibold">Register</h1>
+                <h1 class="text-center fw-semibold">Registrate ó Crea tu cuenta</h1>
                 <div class="text-center">
-                    <a class="text-primary text-body-secondary text-decoration-none fs-6 fw-bold">Crea tu cuenta!</a>
+                    <span class="text-primary text-body-secondary fs-6 fw-medium hover-effect">Ya tienes una cuenta? <a href="" class="primary fst-normal text-decoration-none">Ingresar</a></span>
                 </div>
                 <div class="row mt-4">
                   <div class="col-md-6">
@@ -76,9 +76,8 @@
                     </CInputGroup>
                   </div>
                 </div>
-
                 <div class="d-grid">
-                  <CButton color="success">Create Account</CButton>
+                  <CButton color="success">Registrate!</CButton>
                 </div>
               </CForm>
             </CCardBody>
@@ -94,3 +93,4 @@ export default {
   name: 'Register',
 }
 </script>
+
