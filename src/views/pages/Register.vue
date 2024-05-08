@@ -45,7 +45,7 @@
                       <CInputGroupText>
                         <CIcon icon="cil-wc" />
                       </CInputGroupText>
-                      <select v-model="formData.sex" class="form-control">
+                      <select v-model="formData.sex" class="form-control" tabindex="5">
                         <option value="" disabled selected>Genero
                         </option>
                         <option value="1">Masculino</option>
