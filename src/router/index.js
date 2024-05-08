@@ -347,6 +347,30 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/auth',
+    redirect: '/pages/404',
+    name: 'auth',
+    component: {
+      render() {
+        return h(resolveComponent('router-view'))
+      },
+    },
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: () => import('@/views/auth/login'),
+        meta: { layout: 'auth' },
+      },
+      {
+        path: 'register',
+        name: 'register',
+        component: () => import('@/views/auth/register'),
+        meta: { layout: 'auth' },
+      },
+    ],
+  },
 ]
 
 const router = createRouter({
