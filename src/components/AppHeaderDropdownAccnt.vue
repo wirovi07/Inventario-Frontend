@@ -51,7 +51,8 @@
         <CIcon icon="cil-shield-alt" /> Lock Account
       </CDropdownItem>
       <CDropdownItem>
-        <CIcon icon="cil-lock-locked" /> Logout
+        <CIcon icon="cil-lock-locked" /> 
+        <router-link to="/auth/login" class="text-decoration-none fs-6" style="color: var(--cui-header-hover-color); margin-left: 5px;">Logout</router-link>
       </CDropdownItem>
     </CDropdownMenu>
   </CDropdown>

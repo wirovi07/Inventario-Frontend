@@ -6,36 +6,24 @@
           <CCardGroup>
             <CCard class="p-4">
               <CCardBody>
-                <CForm>
+                <CForm @submit="loginUser">
                   <h1>Login</h1>
-                  <p class="text-body-secondary">Sign In to your account</p>
+                  <p class="text-body-secondary">Iniciar sesión en su cuenta</p>
                   <CInputGroup class="mb-3">
                     <CInputGroupText>
                       <CIcon icon="cil-user" />
                     </CInputGroupText>
-                    <CFormInput
-                      placeholder="Username"
-                      autocomplete="username"
-                    />
+                    <CFormInput v-model="formData.email" placeholder="Usuario" autocomplete="username" />
                   </CInputGroup>
                   <CInputGroup class="mb-4">
                     <CInputGroupText>
                       <CIcon icon="cil-lock-locked" />
                     </CInputGroupText>
-                    <CFormInput
-                      type="password"
-                      placeholder="Password"
-                      autocomplete="current-password"
-                    />
+                    <CFormInput v-model="formData.password" type="password" placeholder="Constraseña" autocomplete="current-password" />
                   </CInputGroup>
                   <CRow>
                     <CCol :xs="6">
-                      <CButton color="primary" class="px-4"> Login </CButton>
-                    </CCol>
-                    <CCol :xs="6" class="text-right">
-                      <CButton color="link" class="px-0">
-                        Forgot password?
-                      </CButton>
+                      <CButton type="submit" color="primary" class="px-4"> Iniciar </CButton>
                     </CCol>
                   </CRow>
                 </CForm>
@@ -44,14 +32,14 @@
             <CCard class="text-white bg-primary py-5" style="width: 44%">
               <CCardBody class="text-center">
                 <div>
-                  <h2>Sign up</h2>
+                  <h2>¡Únete a nosotros!</h2>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Regístrate ahora para empezar a gestionar tus existencias de manera eficiente y aprovechar al máximo
+                    tu negocio.
                   </p>
                   <CButton color="light" variant="outline" class="mt-3">
-                    Register Now!
+                    <router-link to="/auth/register" class="text-decoration-none fs-6"
+                      style="color: var(--cui-header-hover-color); margin-left: 5px;">Registrate!</router-link>
                   </CButton>
                 </div>
               </CCardBody>
@@ -64,7 +52,59 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useApi } from '../../composables/use-api';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+const router = useRouter();
+
+
 export default {
   name: 'Login',
+  setup() {
+    const formData = ref({
+      email: 'xialropin@hotmail.com',
+      password: '12345678',
+    });
+
+    const loginUser = async (event) => {
+      event.preventDefault();
+      if (!formData.value.email
+        || !formData.value.password) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Debe llenar todos los campos',
+          icon: 'error',
+          confirmButtonText: '¡Entendido!'
+        });
+        return;
+      }
+
+      try {
+        // const data = await useApi("login", "POST", formData.value);
+        const data = await axios.post('http://inventario-backend.test/api/login', formData.value);
+
+        const token = data.access_token;
+
+        localStorage.setItem('token', token);
+
+        router.push({ name: 'Home' })
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: error.message,
+          icon: 'error',
+          confirmButtonText: '¡Entendido!'
+        });
+      }
+    };
+
+    return {
+      formData,
+      loginUser,
+    };
+  }
 }
 </script>

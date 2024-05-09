@@ -349,7 +349,6 @@ const routes = [
   },
   {
     path: '/auth',
-    redirect: '/pages/404',
     name: 'auth',
     component: {
       render() {

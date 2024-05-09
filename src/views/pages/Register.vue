@@ -153,11 +153,12 @@
 
 <script>
 import { useRouter } from 'vue-router';
-const router = useRouter();
-
-import { ref, onBeforeMount } from 'vue';
+import { ref } from 'vue';
+import { useApi } from '../../composables/use-api';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+
+const router = useRouter();
 
 export default {
   name: 'Register',
@@ -231,16 +232,16 @@ export default {
         });
 
         formData.value = {
-            type_document: '',
-            document: '',
-            first_name: '',
-            last_name: '',
-            sex: '',
-            address: '',
-            phone: '',
-            email: '',
-            password: '',
-            password_confirmed: '',
+          type_document: '',
+          document: '',
+          first_name: '',
+          last_name: '',
+          sex: '',
+          address: '',
+          phone: '',
+          email: '',
+          password: '',
+          password_confirmed: '',
         };
 
         router.push({ name: 'login' })
@@ -253,7 +254,7 @@ export default {
             const mensaje = e[1]
             errors.value[elemento] = mensaje
           });
-        } 
+        }
       }
     };
 
