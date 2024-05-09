@@ -158,11 +158,10 @@ import { useApi } from '../../composables/use-api';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const router = useRouter();
-
 export default {
   name: 'Register',
   setup() {
+    const router = useRouter();
     const formData = ref({
       type_document: '',
       document: '',

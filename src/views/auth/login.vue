@@ -54,25 +54,21 @@
 <script>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { useApi } from '../../composables/use-api';
-import axios from 'axios';
 import Swal from 'sweetalert2';
-
-const router = useRouter();
-
+import { useApi } from '../../composables/use-api'; // Importa useApi
 
 export default {
   name: 'Login',
   setup() {
+    const router = useRouter();
     const formData = ref({
-      email: 'xialropin@hotmail.com',
+      email: 'wirovi_0798@hotmail.com',
       password: '12345678',
     });
 
     const loginUser = async (event) => {
       event.preventDefault();
-      if (!formData.value.email
-        || !formData.value.password) {
+      if (!formData.value.email || !formData.value.password) {
         Swal.fire({
           title: 'Error!',
           text: 'Debe llenar todos los campos',
@@ -83,21 +79,29 @@ export default {
       }
 
       try {
-        // const data = await useApi("login", "POST", formData.value);
-        const data = await axios.post('http://inventario-backend.test/api/login', formData.value);
+        const data = await useApi("login","POST", formData.value);
 
         const token = data.access_token;
 
         localStorage.setItem('token', token);
 
-        router.push({ name: 'Home' })
+        router.push({ name: 'Dashboard' })
       } catch (error) {
-        Swal.fire({
-          title: 'Error!',
-          text: error.message,
-          icon: 'error',
-          confirmButtonText: '¡Entendido!'
-        });
+        if (error.response && error.response.status) {
+          Swal.fire({
+            title: 'Error!',
+            text: error.message,
+            icon: 'error',
+            confirmButtonText: '¡Entendido!'
+          });
+        } else {
+          Swal.fire({
+            title: 'Error!',
+            text: 'Ocurrió un error al intentar iniciar sesión',
+            icon: 'error',
+            confirmButtonText: '¡Entendido!'
+          });
+        }
       }
     };
 
@@ -107,4 +111,6 @@ export default {
     };
   }
 }
+
+
 </script>

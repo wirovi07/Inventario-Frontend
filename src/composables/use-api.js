@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const useApi = async function (url, method = 'GET', payload = {}) { 
 
-    url = `http://http://inventario-backend.test/api/${url}`;
+    url = `http://Inventario-Backend.test/api/${url}`;
 
     try {
         let headers = {
