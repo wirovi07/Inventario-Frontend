@@ -55,7 +55,7 @@
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import Swal from 'sweetalert2';
-import { useApi } from '../../composables/use-api'; // Importa useApi
+import { useApi } from '../../composables/use-api';
 
 export default {
   name: 'Login',

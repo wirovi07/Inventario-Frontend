@@ -22,8 +22,14 @@ export default [
   {
     component: 'CNavItem',
     name: 'Empoys',
-    to: '/empoys',
+    to: '/theme/empoys',
     icon: 'cil-people',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Empresas',
+    to: '/theme/empresa',
+    icon: 'cil-chart',
   },
   {
     component: 'CNavItem',

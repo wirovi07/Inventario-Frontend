@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import ColorTheme from './ColorTheme'
+import ColorTheme from './ColorTheme.vue'
 export default {
   name: 'Colors',
   components: { ColorTheme },

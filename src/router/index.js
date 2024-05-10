@@ -34,9 +34,15 @@ const routes = [
         meta: { layout: 'auth' },
       },
       {
-        path: '/empoys',
+        path: '/theme/empoys',
         name: 'Empoys',
-        component: () => import('@/views/Empoys.vue'),
+        component: () => import('@/views/theme/Empoys.vue'),
+        meta: { required_auth: true },
+      },  
+      {
+        path: '/theme/empresa',
+        name: 'Empresa',
+        component: () => import('@/views/theme/Empresa.vue'),
         meta: { required_auth: true },
       },      
       {

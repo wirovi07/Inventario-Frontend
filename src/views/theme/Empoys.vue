@@ -31,13 +31,8 @@
 </template>
 
 <script>
-import { onMounted, ref, computed } from 'vue';
-import EmpoysVue from '../views/Empoys.vue'
-import { useApi } from '/src/composables/use-api';
-
-export default {
-  name: 'Empoys',
-  components: { EmpoysVue },
-}
+  export default {
+    name: 'Empoys',
+  }
 
 </script>
