@@ -1,22 +1,75 @@
 <template>
-  <!-- <div class="card flex justify-content-center">
-    <Button label="Show" @click="visible = true" />
-    <Dialog v-model:visible="visible" modal header="Edit Profile" :style="{ width: '25rem' }">
-        <span class="p-text-secondary block mb-5">Update your information.</span>
-        <div class="flex align-items-center gap-3 mb-3">
-            <label for="username" class="font-semibold w-6rem">Username</label>
-            <InputText id="username" class="flex-auto" autocomplete="off" />
+  <CButton color="primary" class="mb-4" @click="() => { visibleVerticallyCenteredScrollableDemo = true }">
+    Crear
+  </CButton>
+  <CModal alignment="center" scrollable :visible="visibleVerticallyCenteredScrollableDemo"
+    @close="() => { visibleVerticallyCenteredScrollableDemo = false }" aria-labelledby="VerticallyCenteredExample2">
+    <CModalHeader>
+      <CModalTitle id="VerticallyCenteredExample2">Crear Empresa</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      <form class="text-start">
+        <div class="form">
+          <!-- NIT -->
+          <div id="inventario-nit" class="field-wrapper input mt-2">
+            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">NIT</label>
+            <input v-model="formData.nit" type="number" class="form-control" tabindex="1" />
+            <template v-if="errors.nit.length > 0">
+              <b :key="e" v-for="e in errors.nit" class="text-danger">
+                {{ e }}
+              </b>
+            </template>
+          </div>
+          <!-- NOMBRE -->
+          <div id="inventario-name" class="field-wrapper input mt-2">
+            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Nombre</label>
+            <input v-model="formData.name" type="text" class="form-control" tabindex="2" />
+            <template v-if="errors.name.length > 0">
+              <b :key="e" v-for="e in errors.name" class="text-danger">
+                {{ e }}
+              </b>
+            </template>
+          </div>
+          <!-- DIRECCION -->
+          <div id="inventario-address" class="field-wrapper input mt-2">
+            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Dirección</label>
+            <input v-model="formData.address" type="text" class="form-control" tabindex="3" />
+            <template v-if="errors.address.length > 0">
+              <b :key="e" v-for="e in errors.address" class="text-danger">
+                {{ e }}
+              </b>
+            </template>
+          </div>
+          <!-- TELEFONO -->
+          <div id="inventario-phone" class="field-wrapper input mt-2">
+            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Telefono</label>
+            <input v-model="formData.phone" type="number" class="form-control" tabindex="3" />
+            <template v-if="errors.phone.length > 0">
+              <b :key="e" v-for="e in errors.phone" class="text-danger">
+                {{ e }}
+              </b>
+            </template>
+          </div>
+          <!-- CORREO -->
+          <div id="inventario-email" class="field-wrapper input mt-2">
+            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Correo</label>
+            <input v-model="formData.email" type="email" class="form-control" tabindex="3" />
+            <template v-if="errors.email.length > 0">
+              <b :key="e" v-for="e in errors.email" class="text-danger">
+                {{ e }}
+              </b>
+            </template>
+          </div>
         </div>
-        <div class="flex align-items-center gap-3 mb-5">
-            <label for="email" class="font-semibold w-6rem">Email</label>
-            <InputText id="email" class="flex-auto" autocomplete="off" />
-        </div>
-        <div class="flex justify-content-end gap-2">
-            <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
-            <Button type="button" label="Save" @click="visible = false"></Button>
-        </div>
-    </Dialog>
-  </div> -->
+      </form>
+    </CModalBody>
+    <CModalFooter>
+      <CButton color="secondary" @click="() => { visibleVerticallyCenteredScrollableDemo = false }">
+        Cerrar
+      </CButton>
+      <CButton color="primary" @click="CreateCompany">Crear</CButton>
+    </CModalFooter>
+  </CModal>
   <CTable striped>
     <CTableHead>
       <CTableRow>
@@ -36,11 +89,15 @@
       </CTableRow>
     </CTableBody>
   </CTable>
+
+
+
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
 import { useApi } from '../../composables/use-api';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default {
   name: 'Empresa',
@@ -76,6 +133,7 @@ export default {
     };
     const visible = ref(false);
 
+    const visibleVerticallyCenteredScrollableDemo = ref(false);
     const tableData = ref([]);
 
     const TableDataApi = async () => {
@@ -99,12 +157,56 @@ export default {
 
     onMounted(TableDataApi);
 
+    const CreateCompany = async () => {
+      alert("si esta entrando")
+        errorsClear();
+
+        let has_error = false;
+        Object.entries(formData.value).forEach((f) => {
+            const elemento = f[0];
+            const value = f[1];
+            if (value == '') {
+                has_error = true;
+                errors.value[elemento] = 'Este campo es obligatorio';
+            }
+        });
+
+        if (has_error) return;
+
+        try {
+          console.log("Enviando datos:", formData.value);
+          await useApi('company', 'POST', formData.value);
+            Swal.fire({
+                title: 'Éxito!',
+                text: 'Empresa creada correctamente!',
+                icon: 'success',
+                confirmButtonText: '¡Entendido!',
+            }).then(() => {
+                if (discardButton.value) {
+                    discardButton.value.click();
+                }
+                resetFormData();
+            });
+        } catch (error) {
+            const errors_api = error.errors;
+            Object.entries(errors_api).forEach((e) => {
+                const elemento = e[0];
+                const mensaje = e[1];
+                errors.value[elemento] = mensaje;
+            });
+        }
+
+        fetchDataFromApi();
+    };
+
     return {
       tableData,
+      CreateCompany,
       formData,
       errors,
       errorsClear,
-      visible
+      visible,
+      visibleVerticallyCenteredScrollableDemo,
     };
   }
 }
