@@ -30,7 +30,7 @@
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.2",
     "primeflex": "^2.0.0",
-    "primevue": "^3.52.0",
+    "primevue": "^2.0.0",
     "simplebar-vue": "^2.3.3",
     "sweetalert2": "^11.10.8",
     "vue": "^3.4.21",
