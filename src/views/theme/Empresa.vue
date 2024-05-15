@@ -101,8 +101,8 @@
   </CModal>
 
   <!-- EDITAR EMPRESA -->
-  <CModal alignment="center" scrollable :visible="visibleVerticallyCenteredScrollableDemo"
-    @close="closeModalAndResetFormData" aria-labelledby="VerticallyCenteredExample2">
+  <CModal alignment="center" scrollable :visible="visibleVerticallyCenteredScrollableDemoEdit"
+    @close="closeModalAndResetFormDataEdit" aria-labelledby="VerticallyCenteredExample2">
     <CModalHeader>
       <CModalTitle id="VerticallyCenteredExample2">Editar Empresa</CModalTitle>
     </CModalHeader>
@@ -163,7 +163,7 @@
       </form>
     </CModalBody>
     <CModalFooter>
-      <CButton color="secondary" @click="closeModalAndResetFormData">Descartar</CButton>
+      <CButton color="secondary" @click="closeModalAndResetFormDataEdit">Descartar</CButton>
       <CButton color="primary" @click="editCompany">Editar</CButton>
     </CModalFooter>
   </CModal>
@@ -218,6 +218,8 @@ export default {
     const visible = ref(false);
 
     const visibleVerticallyCenteredScrollableDemo = ref(false);
+    const visibleVerticallyCenteredScrollableDemoEdit = ref(false);
+
     const tableData = ref([]);
 
     const TableDataApi = async () => {
@@ -289,7 +291,7 @@ export default {
       try {
         const { data } = await useApi('company/' + companyId);
         selectedCompany.value = data;
-        visibleVerticallyCenteredScrollableDemo.value = true;
+        visibleVerticallyCenteredScrollableDemoEdit.value = true;
 
       } catch (error) {
         console.error('Error fetching company data:', error);
@@ -297,7 +299,6 @@ export default {
     };
 
     const editCompany = async () => {
-      console.log("entrar")
       try {
             const datosActualizados = {
                 nit: selectedCompany.value.nit,
@@ -307,9 +308,9 @@ export default {
                 email: selectedCompany.value.email,
             };
 
-            console.log(datosActualizados)
+            console.log("Estos son los datos", datosActualizados)
 
-            await useApi('company/' + id, 'PUT', datosActualizados);
+            await useApi('company/' + selectedCompany.value.id, 'PUT', datosActualizados);
 
             Swal.fire({
                 title: 'Éxito!',
@@ -325,13 +326,15 @@ export default {
         } catch (error) {
             console.error('Error al actualizar la empresa:', error);
         }
-
-        fetchDataFromApi();
     };
 
     const closeModalAndResetFormData = () => {
       visibleVerticallyCenteredScrollableDemo.value = false;
       resetFormData();
+    };
+
+    const closeModalAndResetFormDataEdit = () => {
+      visibleVerticallyCenteredScrollableDemoEdit.value = false;
     };
 
     return {
@@ -342,7 +345,10 @@ export default {
       errorsClear,
       visible,
       visibleVerticallyCenteredScrollableDemo,
+      visibleVerticallyCenteredScrollableDemoEdit,
       closeModalAndResetFormData,
+      visibleVerticallyCenteredScrollableDemoEdit,
+      closeModalAndResetFormDataEdit,
       viewCompany,
       selectedCompany,
       editCompany,
