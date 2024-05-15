@@ -22,7 +22,7 @@
         </CTableDataCell>
 
         <CTableDataCell>
-          <CButton color="primary" size="sm" class="m-1" style="color: white;" @click="viewCompany(row.value)">Editar
+          <CButton color="primary" size="sm" class="m-1" style="color: white;" @click="viewCompany(row.id)">Editar
           </CButton>
           <CButton color="danger" size="sm" @click="deleteRow(index)">Eliminar</CButton>
         </CTableDataCell>
@@ -289,14 +289,14 @@ export default {
     const selectedCompany = ref(null);
 
     const viewCompany = async (companyId) => {
-        try {
-          const { data } = await useApi('company/' + companyId);
-          console.log("Usuario", data)
-          selectedCompany.value = data;
-          visibleVerticallyCenteredScrollableDemo.value = true;
-        } catch (error) {
-          console.error('Error fetching company data:', error);
-        }
+      try {
+        const { data } = await useApi('company/' + companyId);
+        console.log("Empresa:", data); 
+        selectedCompany.value = data;
+        visibleVerticallyCenteredScrollableDemo.value = true;
+      } catch (error) {
+        console.error('Error fetching company data:', error);
+      }
     };
 
     const closeModalAndResetFormData = () => {
