@@ -163,10 +163,8 @@
       </form>
     </CModalBody>
     <CModalFooter>
-      <CButton color="secondary" @click="closeModalAndResetFormData">
-        Descartar
-      </CButton>
-      <CButton color="primary" @click="EditCompany">Editar</CButton>
+      <CButton color="secondary" @click="closeModalAndResetFormData">Descartar</CButton>
+      <CButton color="primary" @click="editCompany">Editar</CButton>
     </CModalFooter>
   </CModal>
 </template>
@@ -227,12 +225,12 @@ export default {
         const { data } = await useApi('company');
 
         const mappedData = data.map((item, index) => ({
-          '#': index + 1,
-          Nit: item.nit,
-          Nombre: item.name,
-          Dirección: item.address,
-          Telefono: item.phone,
-          Correo: item.email
+          id: index + 1,
+          nit: item.nit,
+          name: item.name,
+          address: item.address,
+          phone: item.phone,
+          email: item.email
         }));
 
         tableData.value = mappedData;
@@ -284,19 +282,51 @@ export default {
 
     };
 
-    let id;
-
     const selectedCompany = ref(null);
+    let id;
 
     const viewCompany = async (companyId) => {
       try {
         const { data } = await useApi('company/' + companyId);
-        console.log("Empresa:", data); 
         selectedCompany.value = data;
         visibleVerticallyCenteredScrollableDemo.value = true;
+
       } catch (error) {
         console.error('Error fetching company data:', error);
       }
+    };
+
+    const editCompany = async () => {
+      console.log("entrar")
+      try {
+            const datosActualizados = {
+                nit: selectedCompany.value.nit,
+                name: selectedCompany.value.name,
+                address: selectedCompany.value.address,
+                phone: selectedCompany.value.phone,
+                email: selectedCompany.value.email,
+            };
+
+            console.log(datosActualizados)
+
+            await useApi('company/' + id, 'PUT', datosActualizados);
+
+            Swal.fire({
+                title: 'Éxito!',
+                text: 'Empresa editada correctamente!',
+                icon: 'success',
+                confirmButtonText: '¡Entendido!',
+            }).then(() => {
+                if (discardButton.value) {
+                    discardButton.value.click();
+                }
+                resetFormData();
+            });
+        } catch (error) {
+            console.error('Error al actualizar la empresa:', error);
+        }
+
+        fetchDataFromApi();
     };
 
     const closeModalAndResetFormData = () => {
@@ -314,6 +344,8 @@ export default {
       visibleVerticallyCenteredScrollableDemo,
       closeModalAndResetFormData,
       viewCompany,
+      selectedCompany,
+      editCompany,
     };
   }
 }
