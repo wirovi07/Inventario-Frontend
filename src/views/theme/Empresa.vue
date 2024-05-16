@@ -17,14 +17,16 @@
     </CTableHead>
     <CTableBody>
       <CTableRow v-for="(row, index) in tableData" :key="index">
-        <CTableDataCell v-for="(cell, cellIndex) in row" :key="cellIndex">
-          {{ cell }}
-        </CTableDataCell>
-
+        <CTableDataCell>{{ row.id }}</CTableDataCell> <!-- Mostrar consecutivo -->
+        <CTableDataCell>{{ row.nit }}</CTableDataCell>
+        <CTableDataCell>{{ row.name }}</CTableDataCell>
+        <CTableDataCell>{{ row.address }}</CTableDataCell>
+        <CTableDataCell>{{ row.phone }}</CTableDataCell>
+        <CTableDataCell>{{ row.email }}</CTableDataCell>
         <CTableDataCell>
-          <CButton color="primary" size="sm" class="m-1" style="color: white;" @click="viewCompany(row.id)">Editar
+          <CButton color="primary" size="sm" class="m-1" style="color: white;" @click="viewCompany(row.realId)">Editar
           </CButton>
-          <CButton color="danger" size="sm" @click="deleteRow(index)">Eliminar</CButton>
+          <CButton color="danger" size="sm" @click="deleteCompany(row.realId)">Eliminar</CButton>
         </CTableDataCell>
       </CTableRow>
     </CTableBody>
@@ -225,9 +227,10 @@ export default {
     const TableDataApi = async () => {
       try {
         const { data } = await useApi('company');
-
+        console.log(data)
         const mappedData = data.map((item, index) => ({
           id: index + 1,
+          realId: item.id,
           nit: item.nit,
           name: item.name,
           address: item.address,
@@ -300,34 +303,57 @@ export default {
 
     const editCompany = async () => {
       try {
-            const datosActualizados = {
-                nit: selectedCompany.value.nit,
-                name: selectedCompany.value.name,
-                address: selectedCompany.value.address,
-                phone: selectedCompany.value.phone,
-                email: selectedCompany.value.email,
-            };
+        const datosActualizados = {
+          nit: selectedCompany.value.nit,
+          name: selectedCompany.value.name,
+          address: selectedCompany.value.address,
+          phone: selectedCompany.value.phone,
+          email: selectedCompany.value.email,
+        };
 
-            console.log("Estos son los datos", datosActualizados)
+        console.log("Estos son los datos", datosActualizados)
 
-            await useApi('company/' + selectedCompany.value.id, 'PUT', datosActualizados);
+        await useApi('company/' + selectedCompany.value.id, 'PUT', datosActualizados);
 
-            Swal.fire({
-                title: 'Éxito!',
-                text: 'Empresa editada correctamente!',
-                icon: 'success',
-                confirmButtonText: '¡Entendido!',
-            }).then(() => {
-                if (discardButton.value) {
-                    discardButton.value.click();
-                }
-                resetFormData();
-            });
-        } catch (error) {
-            console.error('Error al actualizar la empresa:', error);
-        }
+        Swal.fire({
+          title: 'Éxito!',
+          text: 'Empresa editada correctamente!',
+          icon: 'success',
+          confirmButtonText: '¡Entendido!',
+        }).then(() => {
+          if (discardButton.value) {
+            discardButton.value.click();
+          }
+          resetFormData();
+        });
+      } catch (error) {
+        console.error('Error al actualizar la empresa:', error);
+      }
     };
 
+    const deleteCompany = async (companyId) => {
+      const result = await Swal.fire({
+        title: 'Estas seguro?',
+        text: '¡No podrás revertir esto!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, borralo!',
+      });
+
+      if (result.isConfirmed) {
+        try {
+          await useApi('company/' + companyId, 'DELETE');
+
+          tableData.value = tableData.value.filter((row) => row.id != id);
+
+          Swal.fire('Eliminar!', 'La empresa ha sido eliminado!.', 'success');
+        } catch (error) {
+          Swal.fire('Error!', 'Ocurrio un error mientas eliminabas la empresa.', 'error');
+        }
+      }
+    };
     const closeModalAndResetFormData = () => {
       visibleVerticallyCenteredScrollableDemo.value = false;
       resetFormData();
@@ -352,6 +378,7 @@ export default {
       viewCompany,
       selectedCompany,
       editCompany,
+      deleteCompany,
     };
   }
 }
