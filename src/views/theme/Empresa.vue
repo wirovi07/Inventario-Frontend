@@ -227,7 +227,7 @@ export default {
     const TableDataApi = async () => {
       try {
         const { data } = await useApi('company');
-        console.log(data)
+
         const mappedData = data.map((item, index) => ({
           id: index + 1,
           realId: item.id,
@@ -268,12 +268,9 @@ export default {
           text: 'Empresa creada correctamente!',
           icon: 'success',
           confirmButtonText: '¡Entendido!',
-        }).then(() => {
-          if (discardButton.value) {
-            discardButton.value.click();
-          }
-          resetFormData();
         });
+          resetFormData();
+          TableDataApi();
       } catch (error) {
         const errors_api = error.errors;
         Object.entries(errors_api).forEach((e) => {
@@ -284,11 +281,9 @@ export default {
       }
 
       fetchDataFromApi();
-
     };
 
     const selectedCompany = ref(null);
-    let id;
 
     const viewCompany = async (companyId) => {
       try {
@@ -320,12 +315,9 @@ export default {
           text: 'Empresa editada correctamente!',
           icon: 'success',
           confirmButtonText: '¡Entendido!',
-        }).then(() => {
-          if (discardButton.value) {
-            discardButton.value.click();
-          }
-          resetFormData();
         });
+          resetFormData();
+          TableDataApi();
       } catch (error) {
         console.error('Error al actualizar la empresa:', error);
       }
@@ -346,14 +338,17 @@ export default {
         try {
           await useApi('company/' + companyId, 'DELETE');
 
-          tableData.value = tableData.value.filter((row) => row.id != id);
+          tableData.value = tableData.value.filter((row) => row.companyId != companyId);
 
           Swal.fire('Eliminar!', 'La empresa ha sido eliminado!.', 'success');
+
+          TableDataApi();
         } catch (error) {
           Swal.fire('Error!', 'Ocurrio un error mientas eliminabas la empresa.', 'error');
         }
       }
     };
+    
     const closeModalAndResetFormData = () => {
       visibleVerticallyCenteredScrollableDemo.value = false;
       resetFormData();
