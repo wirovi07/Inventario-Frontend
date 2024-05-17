@@ -29,12 +29,6 @@ const routes = [
         name: 'Colors',
         component: () => import('@/views/theme/Colors.vue'),
         meta: { layout: 'auth' },
-      },
-      {
-        path: '/theme/empoys',
-        name: 'Empoys',
-        component: () => import('@/views/theme/Empoys.vue'),
-        meta: { required_auth: true },
       },  
       {
         path: '/theme/empresa',
