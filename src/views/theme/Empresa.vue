@@ -290,7 +290,7 @@ export default {
         const { data } = await useApi('company/' + companyId);
         selectedCompany.value = data;
         visibleVerticallyCenteredScrollableDemoEdit.value = true;
-
+        console.log(data)
       } catch (error) {
         console.error('Error fetching company data:', error);
       }
