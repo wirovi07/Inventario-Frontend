@@ -33,6 +33,12 @@ export default [
   },
   {
     component: 'CNavItem',
+    name: 'Empleados',
+    to: '/theme/empleado',
+    icon: 'cil-chart',
+  },
+  {
+    component: 'CNavItem',
     name: 'Typography',
     to: '/theme/typography',
     icon: 'cil-pencil',

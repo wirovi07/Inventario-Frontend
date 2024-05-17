@@ -32,73 +32,151 @@
     </CTableBody>
   </CTable>
 
-  <!-- CREAR EMPRESA -->
-  <CModal alignment="center" scrollable :visible="visibleVerticallyCenteredScrollableDemo"
+  <!-- CREAR EMPLEADO -->
+  <CModal alignment="center"  size="lg" scrollable :visible="visibleVerticallyCenteredScrollableDemo"
     @close="closeModalAndResetFormData" aria-labelledby="VerticallyCenteredExample2">
     <CModalHeader>
       <CModalTitle id="VerticallyCenteredExample2">Crear Empresa</CModalTitle>
     </CModalHeader>
     <CModalBody>
-      <form class="text-start">
-        <div class="form">
-          <!-- NIT -->
-          <div id="inventario-nit" class="field-wrapper input mt-2">
-            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">NIT</label>
-            <input v-model="formData.nit" type="text" class="form-control" tabindex="1" />
-            <template v-if="errors.nit.length > 0">
-              <b :key="e" v-for="e in errors.nit" class="text-danger">
-                {{ e }}
-              </b>
-            </template>
-          </div>
-          <!-- NOMBRE -->
-          <div id="inventario-name" class="field-wrapper input mt-2">
-            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Nombre</label>
-            <input v-model="formData.name" type="text" class="form-control" tabindex="2" />
-            <template v-if="errors.name.length > 0">
-              <b :key="e" v-for="e in errors.name" class="text-danger">
-                {{ e }}
-              </b>
-            </template>
-          </div>
-          <!-- DIRECCION -->
-          <div id="inventario-address" class="field-wrapper input mt-2">
-            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Dirección</label>
-            <input v-model="formData.address" type="text" class="form-control" tabindex="3" />
-            <template v-if="errors.address.length > 0">
-              <b :key="e" v-for="e in errors.address" class="text-danger">
-                {{ e }}
-              </b>
-            </template>
-          </div>
-          <!-- TELEFONO -->
-          <div id="inventario-phone" class="field-wrapper input mt-2">
-            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Telefono</label>
-            <input v-model="formData.phone" type="text" class="form-control" tabindex="4" />
-            <template v-if="errors.phone.length > 0">
-              <b :key="e" v-for="e in errors.phone" class="text-danger">
-                {{ e }}
-              </b>
-            </template>
-          </div>
-          <!-- CORREO -->
-          <div id="inventario-email" class="field-wrapper input mt-2">
-            <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Correo</label>
-            <input v-model="formData.email" type="email" class="form-control" tabindex="5" />
-            <template v-if="errors.email.length > 0">
-              <b :key="e" v-for="e in errors.email" class="text-danger">
-                {{ e }}
-              </b>
-            </template>
-          </div>
+      <div class="row">
+        <div class="col-md-6">
+          <form class="text-start">
+            <div class="form">
+              <!-- TIPO DOCUMENTO -->
+              <div id="inventario-type_document" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Tipo de Documento</label>
+                <select v-model="formData.type_document" class="form-control" tabindex="1">
+                  <option value="" disabled selected>Tipo de Documento</option>
+                  <option value="CC">CC</option>
+                  <option value="EX">EX</option>
+                </select>
+                <template v-if="errors.type_document.length > 0">
+                  <b :key="e" v-for="e in errors.type_document" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- NOMBRE -->
+              <div id="inventario-type_document" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Nombre</label>
+                <input v-model="formData.first_name" type="text" class="form-control" tabindex="3" />
+                <template v-if="errors.first_name.length > 0">
+                  <b :key="e" v-for="e in errors.first_name" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- CARGO -->
+              <div id="inventario-employee_position" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cargo</label>
+                <input v-model="formData.employee_position" type="text" class="form-control" tabindex="5" />
+                <template v-if="errors.employee_position.length > 0">
+                  <b :key="e" v-for="e in errors.employee_position" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- SALARIO -->
+              <div id="inventario-salary" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Salario</label>
+                <input v-model="formData.salary" type="number" class="form-control" tabindex="7" />
+                <template v-if="errors.salary.length > 0">
+                  <b :key="e" v-for="e in errors.salary" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- CORREO -->
+              <div id="inventario-email" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Correo</label>
+                <input v-model="formData.email" type="email" class="form-control" tabindex="9" />
+                <template v-if="errors.email.length > 0">
+                  <b :key="e" v-for="e in errors.email" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- DIRECCION -->
+              <div id="inventario-address" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Direccion</label>
+                <input v-model="formData.address" type="text" class="form-control" tabindex="11" />
+                <template v-if="errors.address.length > 0">
+                  <b :key="e" v-for="e in errors.address" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+            </div>
+          </form>
         </div>
-      </form>
+        <div class="col-md-6">
+          <form class="text-start">
+            <div class="form">
+              <!-- DOCUMENTO -->
+              <div id="inventario-document" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Documento</label>
+                <input v-model="formData.document" type="text" class="form-control" tabindex="2" />
+                <template v-if="errors.document.length > 0">
+                  <b :key="e" v-for="e in errors.document" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- APELLIDO -->
+              <div id="inventario-last_name" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Apellido</label>
+                <input v-model="formData.last_name" type="text" class="form-control" tabindex="4" />
+                <template v-if="errors.last_name.length > 0">
+                  <b :key="e" v-for="e in errors.last_name" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- FECHA CONTRATACION -->
+              <div id="inventario-hire_date" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Fecha de Contratación</label>
+                <input v-model="formData.hire_date" type="date" class="form-control" tabindex="6" />
+                <template v-if="errors.hire_date.length > 0">
+                  <b :key="e" v-for="e in errors.hire_date" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- SEXO -->
+              <div id="inventario-sex" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Sexo</label>
+                <select v-model="formData.sex" class="form-control" tabindex="8">
+                  <option value="" disabled selected>Genero</option>
+                  <option value="1">Masculino</option>
+                  <option value="2">Femenino</option>
+                </select>
+                <template v-if="errors.sex.length > 0">
+                  <b :key="e" v-for="e in errors.sex" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- TELEFONO -->
+              <div id="inventario-phone" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Telefono</label>
+                <input v-model="formData.phone" type="email" class="form-control" tabindex="10" />
+                <template v-if="errors.phone.length > 0">
+                  <b :key="e" v-for="e in errors.phone" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </CModalBody>
     <CModalFooter>
       <CButton color="secondary" @click="closeModalAndResetFormData">
         Descartar
       </CButton>
-      <CButton color="primary" @click="CreateCompany">Crear</CButton>
+      <CButton color="primary" @click="CreateCompany" tabindex="12">Crear</CButton>
     </CModalFooter>
   </CModal>
 
@@ -144,7 +222,7 @@
           <!-- TELEFONO -->
           <div id="inventario-phone" class="field-wrapper input mt-2">
             <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Telefono</label>
-            <input v-model="selectedCompany.phone" type="text" class="form-control" tabindex="4" />
+            <input v-model="selectedCompany.phone" type="text" class="form-control" tabindex="3" />
             <template v-if="errors.phone.length > 0">
               <b :key="e" v-for="e in errors.phone" class="text-danger">
                 {{ e }}
@@ -154,7 +232,7 @@
           <!-- CORREO -->
           <div id="inventario-email" class="field-wrapper input mt-2">
             <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Correo</label>
-            <input v-model="selectedCompany.email" type="email" class="form-control" tabindex="5" />
+            <input v-model="selectedCompany.email" type="email" class="form-control" tabindex="3" />
             <template v-if="errors.email.length > 0">
               <b :key="e" v-for="e in errors.email" class="text-danger">
                 {{ e }}
@@ -182,16 +260,28 @@ export default {
   setup() {
 
     const formData = ref({
-      nit: '',
-      name: '',
+      type_document: '',
+      document: '',
+      first_name: '',
+      last_name: '',
+      employee_position: '',
+      hire_date: '',
+      salary: '',
+      sex: '',
       address: '',
       phone: '',
       email: '',
     });
 
     const errors = ref({
-      nit: [],
-      name: [],
+      type_document: [],
+      document: [],
+      first_name: [],
+      last_name: [],
+      employee_position: [],
+      hire_date: [],
+      salary: [],
+      sex: [],
       address: [],
       phone: [],
       email: [],
@@ -199,8 +289,14 @@ export default {
 
     const errorsClear = () => {
       errors.value = {
-        nit: [],
-        name: [],
+        type_document: [],
+        document: [],
+        first_name: [],
+        last_name: [],
+        employee_position: [],
+        hire_date: [],
+        salary: [],
+        sex: [],
         address: [],
         phone: [],
         email: [],
@@ -209,8 +305,14 @@ export default {
 
     const resetFormData = () => {
       formData.value = {
-        nit: '',
-        name: '',
+        type_document: '',
+        document: '',
+        first_name: '',
+        last_name: '',
+        employee_position: '',
+        hire_date: '',
+        salary: '',
+        sex: '',
         address: '',
         phone: '',
         email: '',
@@ -360,7 +462,6 @@ export default {
 
     return {
       tableData,
-      CreateCompany,
       formData,
       errors,
       errorsClear,
@@ -368,10 +469,10 @@ export default {
       visibleVerticallyCenteredScrollableDemo,
       visibleVerticallyCenteredScrollableDemoEdit,
       closeModalAndResetFormData,
-      visibleVerticallyCenteredScrollableDemoEdit,
       closeModalAndResetFormDataEdit,
       viewCompany,
       selectedCompany,
+      CreateCompany,
       editCompany,
       deleteCompany,
     };
