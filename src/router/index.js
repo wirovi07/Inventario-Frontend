@@ -37,6 +37,12 @@ const routes = [
         meta: { required_auth: true },
       },  
       {
+        path: '/theme/cliente',
+        name: 'Cliente',
+        component: () => import('@/views/theme/Cliente.vue'),
+        meta: { required_auth: true },
+      },  
+      {
         path: '/theme/empleado',
         name: 'Empleado',
         component: () => import('@/views/theme/Empleado.vue'),

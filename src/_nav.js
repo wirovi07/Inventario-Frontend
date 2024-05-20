@@ -21,6 +21,12 @@ export default [
   },
   {
     component: 'CNavItem',
+    name: 'Clientes',
+    to: '/theme/cliente',
+    icon: 'cil-address-book',
+  },
+  {
+    component: 'CNavItem',
     name: 'Empresas',
     to: '/theme/empresa',
     icon: 'cil-chart',

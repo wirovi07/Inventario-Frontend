@@ -11,9 +11,6 @@
         <CTableHeaderCell scope="col">Documento</CTableHeaderCell>
         <CTableHeaderCell scope="col">Nombre</CTableHeaderCell>
         <CTableHeaderCell scope="col">Empresa</CTableHeaderCell>
-        <CTableHeaderCell scope="col">Cargo</CTableHeaderCell>
-        <CTableHeaderCell scope="col">F. Contrato</CTableHeaderCell>
-        <CTableHeaderCell scope="col">Salario</CTableHeaderCell>
         <CTableHeaderCell scope="col">Sexo</CTableHeaderCell>
         <CTableHeaderCell scope="col">Dirección</CTableHeaderCell>
         <CTableHeaderCell scope="col">Telefono</CTableHeaderCell>
@@ -28,27 +25,24 @@
         <CTableDataCell>{{ row.document }}</CTableDataCell>
         <CTableDataCell>{{ row.name }}</CTableDataCell>
         <CTableDataCell>{{ row.name_company }}</CTableDataCell>
-        <CTableDataCell>{{ row.employee_position }}</CTableDataCell>
-        <CTableDataCell>{{ row.hire_date }}</CTableDataCell>
-        <CTableDataCell>{{ row.salary }}</CTableDataCell>
         <CTableDataCell>{{ row.sex }}</CTableDataCell>
         <CTableDataCell>{{ row.address }}</CTableDataCell>
         <CTableDataCell>{{ row.phone }}</CTableDataCell>
         <CTableDataCell>{{ row.email }}</CTableDataCell>
         <CTableDataCell>
-          <CButton color="primary" size="sm" class="m-1" style="color: white;" @click="viewEmploy(row.realId)">Editar
+          <CButton color="primary" size="sm" class="m-1" style="color: white;" @click="viewCustomer(row.realId)">Editar
           </CButton>
-          <CButton color="danger" size="sm" @click="deleteEmploy(row.realId)">Eliminar</CButton>
+          <CButton color="danger" size="sm" @click="deleteCustomer(row.realId)">Eliminar</CButton>
         </CTableDataCell>
       </CTableRow>
     </CTableBody>
   </CTable>
 
-  <!-- CREAR EMPLEADO -->
+  <!-- CREAR CLIENTE -->
   <CModal alignment="center" size="lg" scrollable :visible="visibleVerticallyCenteredScrollableDemo"
     @close="closeModalAndResetFormData" aria-labelledby="VerticallyCenteredExample2">
     <CModalHeader>
-      <CModalTitle id="VerticallyCenteredExample2">Crear Empleado</CModalTitle>
+      <CModalTitle id="VerticallyCenteredExample2">Crear Cliente</CModalTitle>
     </CModalHeader>
     <CModalBody>
       <div class="row">
@@ -92,20 +86,10 @@
                   </b>
                 </template>
               </div>
-              <!-- SALARIO -->
-              <div id="inventario-salary" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Salario</label>
-                <input v-model="formData.salary" type="number" class="form-control" tabindex="7" />
-                <template v-if="errors.salary.length > 0">
-                  <b :key="e" v-for="e in errors.salary" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
               <!-- CORREO -->
               <div id="inventario-email" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Correo</label>
-                <input v-model="formData.email" type="email" class="form-control" tabindex="9" />
+                <input v-model="formData.email" type="email" class="form-control" tabindex="7" />
                 <template v-if="errors.email.length > 0">
                   <b :key="e" v-for="e in errors.email" class="text-danger">
                     {{ e }}
@@ -115,7 +99,7 @@
               <!-- DIRECCION -->
               <div id="inventario-address" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Direccion</label>
-                <input v-model="formData.address" type="text" class="form-control" tabindex="11" />
+                <input v-model="formData.address" type="text" class="form-control" tabindex="9" />
                 <template v-if="errors.address.length > 0">
                   <b :key="e" v-for="e in errors.address" class="text-danger">
                     {{ e }}
@@ -148,30 +132,10 @@
                   </b>
                 </template>
               </div>
-              <!-- CARGO -->
-              <div id="inventario-employee_position" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cargo</label>
-                <input v-model="formData.employee_position" type="text" class="form-control" tabindex="6" />
-                <template v-if="errors.employee_position.length > 0">
-                  <b :key="e" v-for="e in errors.employee_position" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-              <!-- FECHA CONTRATACION -->
-              <div id="inventario-hire_date" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Fecha de Contratación</label>
-                <input v-model="formData.hire_date" type="date" class="form-control" tabindex="8" />
-                <template v-if="errors.hire_date.length > 0">
-                  <b :key="e" v-for="e in errors.hire_date" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
               <!-- SEXO -->
               <div id="inventario-sex" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Sexo</label>
-                <select v-model="formData.sex" class="form-control" tabindex="10">
+                <select v-model="formData.sex" class="form-control" tabindex="6">
                   <option value="" disabled selected>Genero</option>
                   <option value="1">Masculino</option>
                   <option value="2">Femenino</option>
@@ -185,7 +149,7 @@
               <!-- TELEFONO -->
               <div id="inventario-phone" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Telefono</label>
-                <input v-model="formData.phone" type="text" class="form-control" tabindex="12" />
+                <input v-model="formData.phone" type="text" class="form-control" tabindex="8" />
                 <template v-if="errors.phone.length > 0">
                   <b :key="e" v-for="e in errors.phone" class="text-danger">
                     {{ e }}
@@ -201,15 +165,15 @@
       <CButton color="secondary" @click="closeModalAndResetFormData">
         Descartar
       </CButton>
-      <CButton color="primary" @click="createEmploy" tabindex="12">Crear</CButton>
+      <CButton color="primary" @click="createCustomer" tabindex="12">Crear</CButton>
     </CModalFooter>
   </CModal>
 
-  <!-- EDITAR EMPRESA -->
+  <!-- EDITAR CLIENTE -->
   <CModal alignment="center" scrollable :visible="visibleVerticallyCenteredScrollableDemoEdit"
     @close="closeModalAndResetFormDataEdit" aria-labelledby="VerticallyCenteredExample2">
     <CModalHeader>
-      <CModalTitle id="VerticallyCenteredExample2">Editar Empresa</CModalTitle>
+      <CModalTitle id="VerticallyCenteredExample2">Editar Cliente</CModalTitle>
     </CModalHeader>
     <CModalBody>
       <div class="row">
@@ -219,7 +183,7 @@
               <!-- TIPO DOCUMENTO -->
               <div id="inventario-type_document" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Tipo de Documento</label>
-                <select v-model="selectedEmploy.type_document" class="form-control" tabindex="1">
+                <select v-model="selectedCustomer.type_document" class="form-control" tabindex="1">
                   <option value="" disabled selected>Tipo de Documento</option>
                   <option value="cc">CC</option>
                   <option value="ex">EX</option>
@@ -233,7 +197,7 @@
               <!-- NOMBRE -->
               <div id="inventario-type_document" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Nombre</label>
-                <input v-model="selectedEmploy.first_name" type="text" class="form-control" tabindex="3" />
+                <input v-model="selectedCustomer.first_name" type="text" class="form-control" tabindex="3" />
                 <template v-if="errors.first_name.length > 0">
                   <b :key="e" v-for="e in errors.first_name" class="text-danger">
                     {{ e }}
@@ -243,7 +207,7 @@
               <!-- EMPRESA -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Empresa</label>
-                <select v-model="selectedEmploy.company_id" class="form-select" tabindex="2">
+                <select v-model="selectedCustomer.company_id" class="form-select" tabindex="2">
                   <option style="margin: 1px" value="" disabled selected>Empresas</option>
                   <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}</option>
                 </select>
@@ -253,20 +217,10 @@
                   </b>
                 </template>
               </div>
-              <!-- SALARIO -->
-              <div id="inventario-salary" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Salario</label>
-                <input v-model="selectedEmploy.salary" type="number" class="form-control" tabindex="7" />
-                <template v-if="errors.salary.length > 0">
-                  <b :key="e" v-for="e in errors.salary" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
               <!-- CORREO -->
               <div id="inventario-email" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Correo</label>
-                <input v-model="selectedEmploy.email" type="email" class="form-control" tabindex="9" />
+                <input v-model="selectedCustomer.email" type="email" class="form-control" tabindex="9" />
                 <template v-if="errors.email.length > 0">
                   <b :key="e" v-for="e in errors.email" class="text-danger">
                     {{ e }}
@@ -276,7 +230,7 @@
               <!-- DIRECCION -->
               <div id="inventario-address" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Direccion</label>
-                <input v-model="selectedEmploy.address" type="text" class="form-control" tabindex="11" />
+                <input v-model="selectedCustomer.address" type="text" class="form-control" tabindex="11" />
                 <template v-if="errors.address.length > 0">
                   <b :key="e" v-for="e in errors.address" class="text-danger">
                     {{ e }}
@@ -292,7 +246,7 @@
               <!-- DOCUMENTO -->
               <div id="inventario-document" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Documento</label>
-                <input v-model="selectedEmploy.document" type="text" class="form-control" tabindex="2" />
+                <input v-model="selectedCustomer.document" type="text" class="form-control" tabindex="2" />
                 <template v-if="errors.document.length > 0">
                   <b :key="e" v-for="e in errors.document" class="text-danger">
                     {{ e }}
@@ -302,29 +256,9 @@
               <!-- APELLIDO -->
               <div id="inventario-last_name" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Apellido</label>
-                <input v-model="selectedEmploy.last_name" type="text" class="form-control" tabindex="4" />
+                <input v-model="selectedCustomer.last_name" type="text" class="form-control" tabindex="4" />
                 <template v-if="errors.last_name.length > 0">
                   <b :key="e" v-for="e in errors.last_name" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-              <!-- CARGO -->
-              <div id="inventario-employee_position" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cargo</label>
-                <input v-model="selectedEmploy.employee_position" type="text" class="form-control" tabindex="6" />
-                <template v-if="errors.employee_position.length > 0">
-                  <b :key="e" v-for="e in errors.employee_position" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-              <!-- FECHA CONTRATACION -->
-              <div id="inventario-hire_date" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Fecha de Contratación</label>
-                <input v-model="selectedEmploy.hire_date" type="date" class="form-control" tabindex="8" />
-                <template v-if="errors.hire_date.length > 0">
-                  <b :key="e" v-for="e in errors.hire_date" class="text-danger">
                     {{ e }}
                   </b>
                 </template>
@@ -332,7 +266,7 @@
               <!-- SEXO -->
               <div id="inventario-sex" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Sexo</label>
-                <select v-model="selectedEmploy.sex" class="form-control" tabindex="10">
+                <select v-model="selectedCustomer.sex" class="form-control" tabindex="10">
                   <option value="" disabled selected>Genero</option>
                   <option value="masculino">Masculino</option>
                   <option value="femenino">Femenino</option>
@@ -346,7 +280,7 @@
               <!-- TELEFONO -->
               <div id="inventario-phone" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Telefono</label>
-                <input v-model="selectedEmploy.phone" type="text" class="form-control" tabindex="12" />
+                <input v-model="selectedCustomer.phone" type="text" class="form-control" tabindex="12" />
                 <template v-if="errors.phone.length > 0">
                   <b :key="e" v-for="e in errors.phone" class="text-danger">
                     {{ e }}
@@ -360,7 +294,7 @@
     </CModalBody>
     <CModalFooter>
       <CButton color="secondary" @click="closeModalAndResetFormDataEdit">Descartar</CButton>
-      <CButton color="primary" @click="editEmploy">Editar</CButton>
+      <CButton color="primary" @click="editCustomer">Editar</CButton>
     </CModalFooter>
   </CModal>
 </template>
@@ -380,9 +314,6 @@ export default {
       document: '',
       first_name: '',
       last_name: '',
-      employee_position: '',
-      hire_date: '',
-      salary: '',
       sex: '',
       address: '',
       phone: '',
@@ -395,15 +326,11 @@ export default {
       document: [],
       first_name: [],
       last_name: [],
-      employee_position: [],
-      hire_date: [],
-      salary: [],
       sex: [],
       address: [],
       phone: [],
       email: [],
       company_id: []
-
     });
 
     const errorsClear = () => {
@@ -412,9 +339,6 @@ export default {
         document: [],
         first_name: [],
         last_name: [],
-        employee_position: [],
-        hire_date: [],
-        salary: [],
         sex: [],
         address: [],
         phone: [],
@@ -429,9 +353,6 @@ export default {
         document: '',
         first_name: '',
         last_name: '',
-        employee_position: '',
-        hire_date: '',
-        salary: '',
         sex: '',
         address: '',
         phone: '',
@@ -449,7 +370,7 @@ export default {
 
     const TableDataApi = async () => {
       try {
-        const { data } = await useApi('employ');
+        const { data } = await useApi('customer');
 
         const mappedData = data.map((item, index) => ({
           id: index + 1,
@@ -457,14 +378,11 @@ export default {
           type_document: item.type_document,
           document: item.document,
           name: item.name,
-          employee_position: item.employee_position,
-          hire_date: item.hire_date,
-          salary: item.salary,
+          name_company: item.name_company,
           sex: item.sex,
           address: item.address,
           phone: item.phone,
           email: item.email,
-          name_company: item.name_company
         }));
 
         tableData.value = mappedData;
@@ -474,7 +392,7 @@ export default {
     };
     onMounted(TableDataApi);
 
-    const createEmploy = async () => {
+    const createCustomer = async () => {
       errorsClear();
 
       let has_error = false;
@@ -490,10 +408,10 @@ export default {
       if (has_error) return;
 
       try {
-        await useApi('employ', 'POST', formData.value);
+        await useApi('customer', 'POST', formData.value);
         Swal.fire({
           title: 'Éxito!',
-          text: 'Empleado creado correctamente!',
+          text: 'Cliente creado correctamente!',
           icon: 'success',
           confirmButtonText: '¡Entendido!',
         });
@@ -511,38 +429,35 @@ export default {
       fetchDataFromApi();
     };
 
-    const selectedEmploy = ref(null);
+    const selectedCustomer = ref(null);
 
-    const viewEmploy = async (employId) => {
+    const viewCustomer = async (customerId) => {
       try {
-        const { data } = await useApi('employ/' + employId);
-        selectedEmploy.value = data;
+        const { data } = await useApi('customer/' + customerId);
+        selectedCustomer.value = data;
         console.log(data);
         visibleVerticallyCenteredScrollableDemoEdit.value = true;
 
       } catch (error) {
-        console.error('Error fetching company data:', error);
+        console.error('Error fetching customer data:', error);
       }
     };
 
-    const editEmploy = async () => {
+    const editCustomer = async () => {
       try {
         const datosActualizados = {
-          type_document: selectedEmploy.value.type_document,
-          document: selectedEmploy.value.document,
-          first_name: selectedEmploy.value.first_name,
-          last_name: selectedEmploy.value.last_name,
-          employee_position: selectedEmploy.value.employee_position,
-          hire_date: selectedEmploy.value.hire_date,
-          salary: selectedEmploy.value.salary,
-          sex: selectedEmploy.value.sex,
-          address: selectedEmploy.value.address,
-          phone: selectedEmploy.value.phone,
-          email: selectedEmploy.value.email,
-          company_id: selectedEmploy.value.company_id,
+          type_document: selectedCustomer.value.type_document,
+          document: selectedCustomer.value.document,
+          first_name: selectedCustomer.value.first_name,
+          last_name: selectedCustomer.value.last_name,
+          sex: selectedCustomer.value.sex,
+          address: selectedCustomer.value.address,
+          phone: selectedCustomer.value.phone,
+          email: selectedCustomer.value.email,
+          company_id: selectedCustomer.value.company_id,
         };
 
-        await useApi('employ/' + selectedEmploy.value.id, 'PUT', datosActualizados);
+        await useApi('employ/' + selectedCustomer.value.id, 'PUT', datosActualizados);
 
         Swal.fire({
           title: 'Éxito!',
@@ -553,11 +468,11 @@ export default {
         resetFormData();
         TableDataApi();
       } catch (error) {
-        console.error('Error al actualizar la empresa:', error);
+        console.error('Error al actualizar el cliente:', error);
       }
     };
 
-    const deleteEmploy = async (employId) => {
+    const deleteCustomer = async (customerId) => {
       const result = await Swal.fire({
         title: 'Estas seguro?',
         text: '¡No podrás revertir esto!',
@@ -570,15 +485,15 @@ export default {
 
       if (result.isConfirmed) {
         try {
-          await useApi('company/' + employId, 'DELETE');
+          await useApi('company/' + customerId, 'DELETE');
 
-          tableData.value = tableData.value.filter((row) => row.employId != employId);
+          tableData.value = tableData.value.filter((row) => row.customerId != customerId);
 
-          Swal.fire('Eliminar!', 'La empresa ha sido eliminado!.', 'success');
+          Swal.fire('Eliminar!', 'El cliente ha sido eliminado!.', 'success');
 
           TableDataApi();
         } catch (error) {
-          Swal.fire('Error!', 'Debes eliminar la empresa y depues el empleado.', 'error');
+          Swal.fire('Error!', 'Debes eliminar la empresa y depues el cliente.', 'error');
         }
       }
     };
@@ -590,7 +505,7 @@ export default {
         const { data } = await useApi('companyAll');
         companiesList.value = data;
       } catch (error) {
-        console.error('Error al obtener las empresas', error);
+        console.error('Error al obtener los clientes', error);
       }
     };
     onMounted(showCompanies);
@@ -614,11 +529,11 @@ export default {
       visibleVerticallyCenteredScrollableDemoEdit,
       closeModalAndResetFormData,
       closeModalAndResetFormDataEdit,
-      viewEmploy,
-      selectedEmploy,
-      createEmploy,
-      editEmploy,
-      deleteEmploy,
+      viewCustomer,
+      selectedCustomer,
+      createCustomer,
+      editCustomer,
+      deleteCustomer,
       showCompanies,
       companiesList,
     };
