@@ -306,7 +306,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
 
 export default {
-  name: 'Empresa',
+  name: 'Cliente',
   setup() {
 
     const formData = ref({
@@ -457,7 +457,7 @@ export default {
           company_id: selectedCustomer.value.company_id,
         };
 
-        await useApi('employ/' + selectedCustomer.value.id, 'PUT', datosActualizados);
+        await useApi('customer/' + selectedCustomer.value.id, 'PUT', datosActualizados);
 
         Swal.fire({
           title: 'Éxito!',
@@ -485,7 +485,7 @@ export default {
 
       if (result.isConfirmed) {
         try {
-          await useApi('company/' + customerId, 'DELETE');
+          await useApi('customer/' + customerId, 'DELETE');
 
           tableData.value = tableData.value.filter((row) => row.customerId != customerId);
 
@@ -505,7 +505,7 @@ export default {
         const { data } = await useApi('companyAll');
         companiesList.value = data;
       } catch (error) {
-        console.error('Error al obtener los clientes', error);
+        console.error('Error al obtener las empresas', error);
       }
     };
     onMounted(showCompanies);

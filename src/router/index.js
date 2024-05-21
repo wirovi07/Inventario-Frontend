@@ -47,7 +47,19 @@ const routes = [
         name: 'Empleado',
         component: () => import('@/views/theme/Empleado.vue'),
         meta: { required_auth: true },
-      },     
+      },    
+      {
+        path: '/theme/proveedor',
+        name: 'Proveedor',
+        component: () => import('@/views/theme/Proveedor.vue'),
+        meta: { required_auth: true },
+      },  
+      {
+        path: '/theme/producto',
+        name: 'Producto',
+        component: () => import('@/views/theme/Producto.vue'),
+        meta: { required_auth: true },
+      }, 
       {
         path: '/theme/typography',
         name: 'Typography',

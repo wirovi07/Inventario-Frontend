@@ -372,7 +372,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
 
 export default {
-  name: 'Empresa',
+  name: 'Empleado',
   setup() {
 
     const formData = ref({
@@ -570,7 +570,7 @@ export default {
 
       if (result.isConfirmed) {
         try {
-          await useApi('company/' + employId, 'DELETE');
+          await useApi('employ/' + employId, 'DELETE');
 
           tableData.value = tableData.value.filter((row) => row.employId != employId);
 

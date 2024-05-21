@@ -39,6 +39,18 @@ export default [
   },
   {
     component: 'CNavItem',
+    name: 'Proveedores',
+    to: '/theme/proveedor',
+    icon: 'cil-braille',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Productos',
+    to: '/theme/producto',
+    icon: 'cil-grain',
+  },
+  {
+    component: 'CNavItem',
     name: 'Typography',
     to: '/theme/typography',
     icon: 'cil-pencil',
