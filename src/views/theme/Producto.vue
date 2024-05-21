@@ -143,20 +143,10 @@
         <div class="col-md-6">
           <form class="text-start">
             <div class="form">
-              <!-- NOMBRE DE COMPAÑIA -->
-              <div id="inventario-company_name" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Compañia del Proveedor</label>
-                <input v-model="selectedProduct.company_name" type="text" class="form-control" tabindex="1" />
-                <template v-if="errors.company_name.length > 0">
-                  <b :key="e" v-for="e in errors.company_name" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
               <!-- EMPRESA -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Empresa</label>
-                <select v-model="selectedProduct.company_id" class="form-select" tabindex="3">
+                <select v-model="selectedProduct.company_id" class="form-select" tabindex="1">
                   <option style="margin: 1px" value="" disabled selected>Empresas</option>
                   <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}
                   </option>
@@ -167,12 +157,22 @@
                   </b>
                 </template>
               </div>
-              <!-- DIRECCION -->
-              <div id="inventario-address" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Direccion</label>
-                <input v-model="selectedProduct.address" type="text" class="form-control" tabindex="5" />
-                <template v-if="errors.address.length > 0">
-                  <b :key="e" v-for="e in errors.address" class="text-danger">
+              <!-- NOMBRE -->
+              <div id="inventario-name" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Nombre Producto</label>
+                <input v-model="selectedProduct.name" type="text" class="form-control" tabindex="3" />
+                <template v-if="errors.name.length > 0">
+                  <b :key="e" v-for="e in errors.name" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- PRECIO -->
+              <div id="inventario-price" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Precio</label>
+                <input v-model="selectedProduct.price" type="number" class="form-control" tabindex="5" />
+                <template v-if="errors.price.length > 0">
+                  <b :key="e" v-for="e in errors.price" class="text-danger">
                     {{ e }}
                   </b>
                 </template>
@@ -183,32 +183,36 @@
         <div class="col-md-6">
           <form class="text-start">
             <div class="form">
-              <!-- NOMBRE CONTACTO -->
-              <div id="inventario-contact_name" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Nombre del Proveedor</label>
-                <input v-model="selectedProduct.contact_name" type="text" class="form-control" tabindex="2" />
-                <template v-if="errors.contact_name.length > 0">
-                  <b :key="e" v-for="e in errors.contact_name" class="text-danger">
+              <!-- PROVEEDOR -->
+              <div id="inventario-supplier_id" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Proveedor</label>
+                <select v-model="selectedProduct.supplier_id" class="form-select" tabindex="2">
+                  <option style="margin: 1px" value="" disabled selected>Proveedor</option>
+                  <option :value="supplier.id" :key="supplier.id" v-for="supplier in supplierList">{{ supplier.name }}
+                  </option>
+                </select>
+                <template v-if="errors.supplier_id.length > 0">
+                  <b :key="e" v-for="e in errors.supplier_id" class="text-danger">
                     {{ e }}
                   </b>
                 </template>
               </div>
-              <!-- TELEFONO -->
-              <div id="inventario-phone" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Telefono</label>
-                <input v-model="selectedProduct.phone" type="text" class="form-control" tabindex="6" />
-                <template v-if="errors.phone.length > 0">
-                  <b :key="e" v-for="e in errors.phone" class="text-danger">
+              <!-- DESCRIPCION -->
+              <div id="inventario-description" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Descripción</label>
+                <input v-model="selectedProduct.description" type="text" class="form-control" tabindex="4" />
+                <template v-if="errors.description.length > 0">
+                  <b :key="e" v-for="e in errors.description" class="text-danger">
                     {{ e }}
                   </b>
                 </template>
               </div>
-              <!-- CORREO -->
-              <div id="inventario-email" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Correo</label>
-                <input v-model="selectedProduct.email" type="email" class="form-control" tabindex="8" />
-                <template v-if="errors.email.length > 0">
-                  <b :key="e" v-for="e in errors.email" class="text-danger">
+              <!-- CANTIDAD -->
+              <div id="inventario-inventory_quantity" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cantidad</label>
+                <input v-model="selectedProduct.inventory_quantity" type="email" class="form-control" tabindex="6" />
+                <template v-if="errors.inventory_quantity.length > 0">
+                  <b :key="e" v-for="e in errors.inventory_quantity" class="text-danger">
                     {{ e }}
                   </b>
                 </template>
@@ -286,6 +290,19 @@ export default {
       try {
         const { data } = await useApi('product');
 
+        const formatterPrice = new Intl.NumberFormat('es-CO', {
+          style: 'currency',
+          currency: 'COP',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        });
+
+        const formatterQuantity = new Intl.NumberFormat('es-CO', {
+          style: 'decimal',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        });
+
         const mappedData = data.map((item, index) => ({
           id: index + 1,
           realId: item.id,
@@ -293,8 +310,8 @@ export default {
           name_supplier: item.name_supplier,
           name: item.name,
           description: item.description,
-          price: item.price,
-          inventory_quantity: item.inventory_quantity,
+          price: formatterPrice.format(item.price),
+          inventory_quantity: formatterQuantity.format(item.inventory_quantity),
         }));
 
         tableData.value = mappedData;
