@@ -7,9 +7,9 @@
     <CTableHead>
       <CTableRow>
         <CTableHeaderCell scope="col">#</CTableHeaderCell>
-        <CTableHeaderCell scope="col">Nombre Prov.</CTableHeaderCell>
         <CTableHeaderCell scope="col">Empresa</CTableHeaderCell>
-        <CTableHeaderCell scope="col">Nombre</CTableHeaderCell>
+        <CTableHeaderCell scope="col">Nombre Prov.</CTableHeaderCell>
+        <CTableHeaderCell scope="col">Nombre Producto</CTableHeaderCell>
         <CTableHeaderCell scope="col">Descripción</CTableHeaderCell>
         <CTableHeaderCell scope="col">Precio</CTableHeaderCell>
         <CTableHeaderCell scope="col">Cantidad</CTableHeaderCell>
@@ -50,7 +50,8 @@
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Empresa</label>
                 <select v-model="formData.company_id" class="form-select" tabindex="1">
                   <option style="margin: 1px" value="" disabled selected>Empresas</option>
-                  <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}</option>
+                  <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}
+                  </option>
                 </select>
                 <template v-if="errors.company_id.length > 0">
                   <b :key="e" v-for="e in errors.company_id" class="text-danger">
@@ -71,7 +72,7 @@
               <!-- PRECIO -->
               <div id="inventario-price" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Precio</label>
-                <input v-model="formData.price" type="number" class="form-control" tabindex="4" />
+                <input v-model="formData.price" type="number" class="form-control" tabindex="5" />
                 <template v-if="errors.price.length > 0">
                   <b :key="e" v-for="e in errors.price" class="text-danger">
                     {{ e }}
@@ -85,14 +86,15 @@
           <form class="text-start">
             <div class="form">
               <!-- PROVEEDOR -->
-              <div id="inventario-product_id" class="field-wrapper input mt-2">
+              <div id="inventario-supplier_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Proveedor</label>
-                <select v-model="formData.product_id" class="form-select" tabindex="2">
+                <select v-model="formData.supplier_id" class="form-select" tabindex="2">
                   <option style="margin: 1px" value="" disabled selected>Proveedor</option>
-                  <option :value="product.id" :key="product.id" v-for="product in productsList">{{ product.name }}</option>
+                  <option :value="supplier.id" :key="supplier.id" v-for="supplier in supplierList">{{ supplier.name }}
+                  </option>
                 </select>
-                <template v-if="errors.product_id.length > 0">
-                  <b :key="e" v-for="e in errors.product_id" class="text-danger">
+                <template v-if="errors.supplier_id.length > 0">
+                  <b :key="e" v-for="e in errors.supplier_id" class="text-danger">
                     {{ e }}
                   </b>
                 </template>
@@ -100,7 +102,7 @@
               <!-- DESCRIPCION -->
               <div id="inventario-description" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Descripción</label>
-                <input v-model="formData.description" type="text" class="form-control" tabindex="5" />
+                <input v-model="formData.description" type="text" class="form-control" tabindex="4" />
                 <template v-if="errors.description.length > 0">
                   <b :key="e" v-for="e in errors.description" class="text-danger">
                     {{ e }}
@@ -110,7 +112,7 @@
               <!-- CANTIDAD -->
               <div id="inventario-inventory_quantity" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cantidad</label>
-                <input v-model="formData.inventory_quantity" type="email" class="form-control" tabindex="6s" />
+                <input v-model="formData.inventory_quantity" type="email" class="form-control" tabindex="6" />
                 <template v-if="errors.inventory_quantity.length > 0">
                   <b :key="e" v-for="e in errors.inventory_quantity" class="text-danger">
                     {{ e }}
@@ -156,7 +158,8 @@
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Empresa</label>
                 <select v-model="selectedProduct.company_id" class="form-select" tabindex="3">
                   <option style="margin: 1px" value="" disabled selected>Empresas</option>
-                  <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}</option>
+                  <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}
+                  </option>
                 </select>
                 <template v-if="errors.company_id.length > 0">
                   <b :key="e" v-for="e in errors.company_id" class="text-danger">
@@ -416,6 +419,18 @@ export default {
     };
     onMounted(showCompanies);
 
+    const supplierList = ref([]);
+
+    const showSuppliers = async () => {
+      try {
+        const { data } = await useApi('supplierAll');
+        supplierList.value = data;
+      } catch (error) {
+        console.error('Error al obtener los proveedores', error);
+      }
+    };
+    onMounted(showSuppliers);
+
     const closeModalAndResetFormData = () => {
       visibleVerticallyCenteredScrollableDemo.value = false;
       resetFormData();
@@ -442,6 +457,8 @@ export default {
       deleteProduct,
       showCompanies,
       companiesList,
+      showSuppliers,
+      supplierList,
     };
   }
 }
