@@ -51,6 +51,12 @@ export default [
   },
   {
     component: 'CNavItem',
+    name: 'Ventas',
+    to: '/theme/venta',
+    icon: 'cil-dollar',
+  },
+  {
+    component: 'CNavItem',
     name: 'Typography',
     to: '/theme/typography',
     icon: 'cil-pencil',

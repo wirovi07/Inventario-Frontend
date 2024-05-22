@@ -31,17 +31,17 @@ const routes = [
         meta: { layout: 'auth' },
       },  
       {
-        path: '/theme/empresa',
-        name: 'Empresa',
-        component: () => import('@/views/theme/Empresa.vue'),
-        meta: { required_auth: true },
-      },  
-      {
         path: '/theme/cliente',
         name: 'Cliente',
         component: () => import('@/views/theme/Cliente.vue'),
         meta: { required_auth: true },
       },  
+      {
+        path: '/theme/empresa',
+        name: 'Empresa',
+        component: () => import('@/views/theme/Empresa.vue'),
+        meta: { required_auth: true },
+      }, 
       {
         path: '/theme/empleado',
         name: 'Empleado',
@@ -58,6 +58,12 @@ const routes = [
         path: '/theme/producto',
         name: 'Producto',
         component: () => import('@/views/theme/Producto.vue'),
+        meta: { required_auth: true },
+      }, 
+      {
+        path: '/theme/venta',
+        name: 'Venta',
+        component: () => import('@/views/theme/Venta.vue'),
         meta: { required_auth: true },
       }, 
       {
