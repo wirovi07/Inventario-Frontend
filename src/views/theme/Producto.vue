@@ -38,7 +38,7 @@
   <CModal alignment="center" size="lg" scrollable :visible="visibleVerticallyCenteredScrollableDemo"
     @close="closeModalAndResetFormData" aria-labelledby="VerticallyCenteredExample2">
     <CModalHeader>
-      <CModalTitle id="VerticallyCenteredExample2">Crear Proveedor</CModalTitle>
+      <CModalTitle id="VerticallyCenteredExample2">Crear Producto</CModalTitle>
     </CModalHeader>
     <CModalBody>
       <div class="row">
@@ -136,7 +136,7 @@
   <CModal alignment="center" scrollable :visible="visibleVerticallyCenteredScrollableDemoEdit"
     @close="closeModalAndResetFormDataEdit" aria-labelledby="VerticallyCenteredExample2">
     <CModalHeader>
-      <CModalTitle id="VerticallyCenteredExample2">Editar Proveedor</CModalTitle>
+      <CModalTitle id="VerticallyCenteredExample2">Editar Producto</CModalTitle>
     </CModalHeader>
     <CModalBody>
       <div class="row">
