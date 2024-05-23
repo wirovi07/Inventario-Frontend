@@ -122,6 +122,16 @@
                   </b>
                 </template>
               </div>
+              <!-- CONTRASEÑA -->
+              <div id="inventario-password" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Contraseña</label>
+                <input v-model="formData.password" type="password" class="form-control" tabindex="13" />
+                <template v-if="errors.password.length > 0">
+                  <b :key="e" v-for="e in errors.password" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
             </div>
           </form>
         </div>
@@ -188,6 +198,16 @@
                 <input v-model="formData.phone" type="text" class="form-control" tabindex="12" />
                 <template v-if="errors.phone.length > 0">
                   <b :key="e" v-for="e in errors.phone" class="text-danger">
+                    {{ e }}
+                  </b>
+                </template>
+              </div>
+              <!-- CONTRASEÑA - CONFIRMAR -->
+              <div id="inventario-password" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Confirmar contraseña</label>
+                <input v-model="formData.password_confirmed" type="password" class="form-control" tabindex="14" />
+                <template v-if="errors.password_confirmed.length > 0">
+                  <b :key="e" v-for="e in errors.password_confirmed" class="text-danger">
                     {{ e }}
                   </b>
                 </template>
@@ -387,6 +407,8 @@ export default {
       address: '',
       phone: '',
       email: '',
+      password: '',
+      password_confirmed: '',
       company_id: ''
     });
 
@@ -402,8 +424,9 @@ export default {
       address: [],
       phone: [],
       email: [],
+      password: [],
+      password_confirmed: [],
       company_id: []
-
     });
 
     const errorsClear = () => {
@@ -419,6 +442,8 @@ export default {
         address: [],
         phone: [],
         email: [],
+        password: [],
+        password_confirmed: [],
         company_id: []
       };
     };
@@ -436,6 +461,8 @@ export default {
         address: '',
         phone: '',
         email: '',
+        password: '',
+        password_confirmed: '',
         company_id: ''
       };
     };
