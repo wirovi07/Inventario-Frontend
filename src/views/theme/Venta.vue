@@ -3,6 +3,8 @@
     Crear
   </CButton>
 
+  <p>Usuario logeado ID: {{ userId }}</p>
+
   <CTable striped>
     <CTableHead>
       <CTableRow>
@@ -40,8 +42,8 @@
     </CModalHeader>
     <CModalBody>
       <div id="inventario-date" class="field-wrapper input mt-2">
-        <label for="fullname" class="col-form-label p-1 fs-6 fw-bold w-auto">Fecha</label>
-        <input v-model="formData.date" type="date" class="form-control" />
+        <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Fecha</label>
+        <input v-model="formData.date" type="date" class="form-control w-auto" />
         <template v-if="errors.date.length > 0">
           <b :key="e" v-for="e in errors.date" class="text-danger">
             {{ e }}
@@ -80,8 +82,8 @@
                   <option :value="product.id" :key="product.id" v-for="product in productList">{{ product.name }}
                   </option>
                 </select>
-                <template v-if="errors.company_id.length > 0">
-                  <b :key="e" v-for="e in errors.company_id" class="text-danger">
+                <template v-if="errors.product_id.length > 0">
+                  <b :key="e" v-for="e in errors.product_id" class="text-danger">
                     {{ e }}
                   </b>
                 </template>
@@ -99,101 +101,6 @@
     </CModalFooter>
   </CModal>
 
-  <!-- EDITAR PRODUCTO -->
-  <CModal alignment="center" scrollable :visible="visibleVerticallyCenteredScrollableDemoEdit"
-    @close="closeModalAndResetFormDataEdit" aria-labelledby="VerticallyCenteredExample2">
-    <CModalHeader>
-      <CModalTitle id="VerticallyCenteredExample2">Editar Venta</CModalTitle>
-    </CModalHeader>
-    <CModalBody>
-      <div class="row">
-        <div class="col-md-6">
-          <form class="text-start">
-            <div class="form">
-              <!-- EMPRESA -->
-              <div id="inventario-company_id" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Empresa</label>
-                <select v-model="selectedProduct.company_id" class="form-select" tabindex="1">
-                  <option style="margin: 1px" value="" disabled selected>Empresas</option>
-                  <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}
-                  </option>
-                </select>
-                <template v-if="errors.company_id.length > 0">
-                  <b :key="e" v-for="e in errors.company_id" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-              <!-- NOMBRE -->
-              <div id="inventario-name" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Nombre Producto</label>
-                <input v-model="selectedProduct.name" type="text" class="form-control" tabindex="3" />
-                <template v-if="errors.name.length > 0">
-                  <b :key="e" v-for="e in errors.name" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-              <!-- PRECIO -->
-              <div id="inventario-price" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Precio</label>
-                <input v-model="selectedProduct.price" type="number" class="form-control" tabindex="5" />
-                <template v-if="errors.price.length > 0">
-                  <b :key="e" v-for="e in errors.price" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="col-md-6">
-          <form class="text-start">
-            <div class="form">
-              <!-- PROVEEDOR -->
-              <div id="inventario-supplier_id" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Proveedor</label>
-                <select v-model="selectedProduct.supplier_id" class="form-select" tabindex="2">
-                  <option style="margin: 1px" value="" disabled selected>Proveedor</option>
-                  <option :value="supplier.id" :key="supplier.id" v-for="supplier in supplierList">{{ supplier.name }}
-                  </option>
-                </select>
-                <template v-if="errors.supplier_id.length > 0">
-                  <b :key="e" v-for="e in errors.supplier_id" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-              <!-- DESCRIPCION -->
-              <div id="inventario-description" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Descripción</label>
-                <input v-model="selectedProduct.description" type="text" class="form-control" tabindex="4" />
-                <template v-if="errors.description.length > 0">
-                  <b :key="e" v-for="e in errors.description" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-              <!-- CANTIDAD -->
-              <div id="inventario-inventory_quantity" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cantidad</label>
-                <input v-model="selectedProduct.inventory_quantity" type="email" class="form-control" tabindex="6" />
-                <template v-if="errors.inventory_quantity.length > 0">
-                  <b :key="e" v-for="e in errors.inventory_quantity" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </CModalBody>
-    <CModalFooter>
-      <CButton color="secondary" @click="closeModalAndResetFormDataEdit">Descartar</CButton>
-      <CButton color="primary" @click="editProduct">Editar</CButton>
-    </CModalFooter>
-  </CModal>
 </template>
 
 <script>
@@ -206,13 +113,26 @@ export default {
   name: 'Venta',
   setup() {
 
+    const userId = ref(null);
+
+    const getUserInfo = async () => {
+      try {
+        const response = await useApi('userProfile');
+        userId.value = response.data.id;
+      } catch (error) {
+        console.error('Error al obtener la información del usuario:', error);
+      }
+    };
+
+    onMounted(getUserInfo);
+
     const formData = ref({
       date: '',
       total: '',
       company_id: '',
       employee_id: '',
       customer_id: '',
-      product_id
+      product_id: ''
     });
 
     const errors = ref({
@@ -400,12 +320,13 @@ export default {
 
     const showProducts = async () => {
       try {
-        const { data } = await useApi('companyAll');
+        const { data } = await useApi('productAll');
         productList.value = data;
       } catch (error) {
         console.error('Error al obtener los productos', error);
       }
     };
+    onMounted(showProducts);
 
     const closeModalAndResetFormData = () => {
       visibleVerticallyCenteredScrollableDemo.value = false;
@@ -435,6 +356,8 @@ export default {
       customerList,
       showProducts,
       productList,
+      getUserInfo,
+      userId
     };
   }
 }
