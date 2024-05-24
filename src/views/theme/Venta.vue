@@ -39,34 +39,29 @@
       <CModalTitle id="VerticallyCenteredExample2">Crear Venta</CModalTitle>
     </CModalHeader>
     <CModalBody>
+      <div id="inventario-date" class="field-wrapper input mt-2">
+        <label for="fullname" class="col-form-label p-1 fs-6 fw-bold w-auto">Fecha</label>
+        <input v-model="formData.date" type="date" class="form-control" />
+        <template v-if="errors.date.length > 0">
+          <b :key="e" v-for="e in errors.date" class="text-danger">
+            {{ e }}
+          </b>
+        </template>
+      </div>
       <div class="row">
         <div class="col-md-6">
           <form class="text-start">
             <div class="form">
-              <!-- EMPRESA -->
-              <div id="inventario-company_id" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Empresa</label>
-                <select v-model="formData.company_id" class="form-select" tabindex="1">
-                  <option style="margin: 1px" value="" disabled selected>Empresas</option>
-                  <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}
-                  </option>
-                </select>
-                <template v-if="errors.company_id.length > 0">
-                  <b :key="e" v-for="e in errors.company_id" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
               <!-- CLIENTE -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cliente</label>
-                <select v-model="formData.company_id" class="form-select" tabindex="1">
-                  <option style="margin: 1px" value="" disabled selected>Empresas</option>
-                  <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}
+                <select v-model="formData.customer_id" class="form-select" tabindex="1">
+                  <option style="margin: 1px" value="" disabled selected>Cliente</option>
+                  <option :value="customer.id" :key="customer.id" v-for="customer in customerList">{{ customer.name }}
                   </option>
                 </select>
-                <template v-if="errors.company_id.length > 0">
-                  <b :key="e" v-for="e in errors.company_id" class="text-danger">
+                <template v-if="errors.customer_id.length > 0">
+                  <b :key="e" v-for="e in errors.customer_id" class="text-danger">
                     {{ e }}
                   </b>
                 </template>
@@ -77,27 +72,12 @@
         <div class="col-md-6">
           <form class="text-start">
             <div class="form">
-              <!-- EMPLEADO -->
+              <!-- PRODUCTO -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Empleado</label>
-                <select v-model="formData.company_id" class="form-select" tabindex="1">
-                  <option style="margin: 1px" value="" disabled selected>Empresas</option>
-                  <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}
-                  </option>
-                </select>
-                <template v-if="errors.company_id.length > 0">
-                  <b :key="e" v-for="e in errors.company_id" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-              <!-- TOTAL -->
-              <div id="inventario-company_id" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Total</label>
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Total</label>
-                <select v-model="formData.company_id" class="form-select" tabindex="1">
-                  <option style="margin: 1px" value="" disabled selected>Empresas</option>
-                  <option :value="company.id" :key="company.id" v-for="company in companiesList">{{ company.name }}
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Producto</label>
+                <select v-model="formData.product_id" class="form-select" tabindex="2">
+                  <option style="margin: 1px" value="" disabled selected>Productos</option>
+                  <option :value="product.id" :key="product.id" v-for="product in productList">{{ product.name }}
                   </option>
                 </select>
                 <template v-if="errors.company_id.length > 0">
@@ -231,7 +211,8 @@ export default {
       total: '',
       company_id: '',
       employee_id: '',
-      customer_id: ''
+      customer_id: '',
+      product_id
     });
 
     const errors = ref({
@@ -239,7 +220,8 @@ export default {
       total: [],
       company_id: [],
       employee_id: [],
-      customer_id: []
+      customer_id: [],
+      product_id: []
     });
 
     const errorsClear = () => {
@@ -248,7 +230,8 @@ export default {
         total: [],
         company_id: [],
         employee_id: [],
-        customer_id: []
+        customer_id: [],
+        product_id: []
       };
     };
 
@@ -258,7 +241,8 @@ export default {
         total: '',
         company_id: '',
         employee_id: '',
-        customer_id: ''
+        customer_id: '',
+        product_id: ''
       };
     };
 
@@ -400,29 +384,28 @@ export default {
       }
     };
 
-    const companiesList = ref([]);
+    const customerList = ref([]);
 
-    const showCompanies = async () => {
+    const showCustomer = async () => {
+      try {
+        const { data } = await useApi('customerAll');
+        customerList.value = data;
+      } catch (error) {
+        console.error('Error al obtener los clientes', error);
+      }
+    };
+    onMounted(showCustomer);
+
+    const productList = ref([]);
+
+    const showProducts = async () => {
       try {
         const { data } = await useApi('companyAll');
-        companiesList.value = data;
+        productList.value = data;
       } catch (error) {
-        console.error('Error al obtener las empresas', error);
+        console.error('Error al obtener los productos', error);
       }
     };
-    onMounted(showCompanies);
-
-    const supplierList = ref([]);
-
-    const showSuppliers = async () => {
-      try {
-        const { data } = await useApi('supplierAll');
-        supplierList.value = data;
-      } catch (error) {
-        console.error('Error al obtener los proveedores', error);
-      }
-    };
-    onMounted(showSuppliers);
 
     const closeModalAndResetFormData = () => {
       visibleVerticallyCenteredScrollableDemo.value = false;
@@ -448,10 +431,10 @@ export default {
       createProduct,
       editProduct,
       deleteSale,
-      showCompanies,
-      companiesList,
-      showSuppliers,
-      supplierList,
+      showCustomer,
+      customerList,
+      showProducts,
+      productList,
     };
   }
 }
