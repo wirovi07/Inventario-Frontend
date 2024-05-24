@@ -92,6 +92,34 @@
           </form>
         </div>
       </div>
+      <CTable striped>
+        <CTableHead>
+          <CTableRow>
+            <CTableHeaderCell scope="col">#</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Producto</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Precio</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Cantidad</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Subtotal</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Total</CTableHeaderCell>
+            <CTableHeaderCell scope="col">Acciones</CTableHeaderCell>
+          </CTableRow>
+        </CTableHead>
+        <CTableBody>
+          <CTableRow v-for="(row, index) in tableData" :key="index">
+            <CTableDataCell>{{ row.id }}</CTableDataCell> <!-- Mostrar consecutivo -->
+            <CTableDataCell>{{ row.company }}</CTableDataCell>
+            <CTableDataCell>{{ row.employ }}</CTableDataCell>
+            <CTableDataCell>{{ row.customer }}</CTableDataCell>
+            <CTableDataCell>{{ row.date }}</CTableDataCell>
+            <CTableDataCell>{{ row.total }}</CTableDataCell>
+            <CTableDataCell>
+              <CButton color="primary" size="sm" class="m-1" style="color: white;" @click="viewSale(row.realId)">Editar
+              </CButton>
+              <CButton color="danger" size="sm" @click="deleteSale(row.realId)">Eliminar</CButton>
+            </CTableDataCell>
+          </CTableRow>
+        </CTableBody>
+      </CTable>
     </CModalBody>
     <CModalFooter>
       <CButton color="secondary" @click="closeModalAndResetFormData">
