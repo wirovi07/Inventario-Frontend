@@ -3,8 +3,6 @@
     Crear
   </CButton>
 
-  <p>Usuario logeado ID: {{ userId }}</p>
-
   <CTable striped>
     <CTableHead>
       <CTableRow>
@@ -41,15 +39,6 @@
       <CModalTitle id="VerticallyCenteredExample2">Crear Venta</CModalTitle>
     </CModalHeader>
     <CModalBody>
-      <div id="inventario-date" class="field-wrapper input mt-2">
-        <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Fecha</label>
-        <input v-model="formData.date" type="date" class="form-control w-auto" />
-        <template v-if="errors.date.length > 0">
-          <b :key="e" v-for="e in errors.date" class="text-danger">
-            {{ e }}
-          </b>
-        </template>
-      </div>
       <div class="row">
         <div class="col-md-6">
           <form class="text-start">
@@ -92,34 +81,42 @@
           </form>
         </div>
       </div>
-      <CTable striped>
-        <CTableHead>
-          <CTableRow>
-            <CTableHeaderCell scope="col">#</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Producto</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Precio</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Cantidad</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Subtotal</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Total</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Acciones</CTableHeaderCell>
-          </CTableRow>
-        </CTableHead>
-        <CTableBody>
-          <CTableRow v-for="(row, index) in tableData" :key="index">
-            <CTableDataCell>{{ row.id }}</CTableDataCell> <!-- Mostrar consecutivo -->
-            <CTableDataCell>{{ row.company }}</CTableDataCell>
-            <CTableDataCell>{{ row.employ }}</CTableDataCell>
-            <CTableDataCell>{{ row.customer }}</CTableDataCell>
-            <CTableDataCell>{{ row.date }}</CTableDataCell>
-            <CTableDataCell>{{ row.total }}</CTableDataCell>
-            <CTableDataCell>
-              <CButton color="primary" size="sm" class="m-1" style="color: white;" @click="viewSale(row.realId)">Editar
-              </CButton>
-              <CButton color="danger" size="sm" @click="deleteSale(row.realId)">Eliminar</CButton>
-            </CTableDataCell>
-          </CTableRow>
-        </CTableBody>
-      </CTable>
+      <div class="mt-5">
+        <h5>Detalle de Venta</h5>
+        <table class="mt-4">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Producto</th>
+              <th class="text-center">Cantidad</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody class="text-secondary">
+            <tr v-for="(row, index) in productRows" :key="index" class="mb-3">
+              <td class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" @click="removeProductRow(index)"  class="icon icon-xxl w-75" viewBox="0 0 512 512" role="img">undefined<polygon fill="var(--ci-primary-color, currentColor)" points="348.071 141.302 260.308 229.065 172.545 141.302 149.917 163.929 237.681 251.692 149.917 339.456 172.545 362.083 260.308 274.32 348.071 362.083 370.699 339.456 282.935 251.692 370.699 163.929 348.071 141.302" class="ci-primary"></polygon><path fill="var(--ci-primary-color, currentColor)" d="M425.706,86.294A240,240,0,0,0,86.294,425.706,240,240,0,0,0,425.706,86.294ZM256,464C141.309,464,48,370.691,48,256S141.309,48,256,48s208,93.309,208,208S370.691,464,256,464Z" class="ci-primary"></path></svg>
+              </td>
+              <td>
+                <input v-model="row.description" type="text" class="form-control mb-1 col-form-label p-1 fs-6 fw-bold" placeholder="Producto" />
+                <input v-model="row.details" type="text" class="form-control mb-1 col-form-label p-1 fs-6 fw-bold" placeholder="Precio unitario" />
+              </td>
+              <td class="text-center">
+                <div class="d-flex justify-content-center">
+                  <input v-model="row.rate" type="number" class="form-control mb-1 col-form-label p-1 fs-6 fw-bold w-25" placeholder="Cant" />
+                </div>
+              </td>
+              <td>
+                <input v-model="row.qty" type="number" class="form-control mb-1 col-form-label p-1 fs-6 fw-bold" placeholder="Subtotal" />
+              </td>
+              <td>
+                <span>{{ row.amount }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <button @click="addProductRow" class="btn btn-info m-3" type="button">Agregar</button>
+      </div>
     </CModalBody>
     <CModalFooter>
       <CButton color="secondary" @click="closeModalAndResetFormData">
@@ -128,7 +125,6 @@
       <CButton color="primary" @click="createProduct" tabindex="12">Crear</CButton>
     </CModalFooter>
   </CModal>
-
 </template>
 
 <script>
@@ -365,6 +361,20 @@ export default {
       visibleVerticallyCenteredScrollableDemoEdit.value = false;
     };
 
+    const productRows = ref([
+      { description: '', details: '', rate: '', qty: '', amount: '' },
+    ]);
+
+    const addProductRow = () => {
+      productRows.value.push({ description: '', details: '', rate: '', qty: '', amount: '' });
+    };
+
+    const removeProductRow = (index) => {
+      if (productRows.value.length > 1) {
+        productRows.value.splice(index, 1);
+      }
+    };
+
     return {
       tableData,
       formData,
@@ -385,7 +395,10 @@ export default {
       showProducts,
       productList,
       getUserInfo,
-      userId
+      userId,
+      productRows,
+      addProductRow,
+      removeProductRow
     };
   }
 }
