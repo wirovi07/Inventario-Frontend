@@ -36,7 +36,7 @@
   <CModal alignment="center" size="lg" scrollable :visible="visibleVerticallyCenteredScrollableDemo"
     @close="closeModalAndResetFormData" aria-labelledby="VerticallyCenteredExample2">
     <CModalHeader>
-      <CModalTitle id="VerticallyCenteredExample2">Crear Venta</CModalTitle>
+      <CModalTitle id="VerticallyCenteredExample2">Crear Detalle de la Venta</CModalTitle>
     </CModalHeader>
     <CModalBody>
       <div class="row">
@@ -60,57 +60,52 @@
             </div>
           </form>
         </div>
-        <div class="col-md-6">
-          <form class="text-start">
-            <div class="form">
-              <!-- PRODUCTO -->
-              <div id="inventario-company_id" class="field-wrapper input mt-2">
-                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Producto</label>
-                <select v-model="formData.product_id" class="form-select" tabindex="2">
-                  <option style="margin: 1px" value="" disabled selected>Productos</option>
-                  <option :value="product.id" :key="product.id" v-for="product in productList">{{ product.name }}
-                  </option>
-                </select>
-                <template v-if="errors.product_id.length > 0">
-                  <b :key="e" v-for="e in errors.product_id" class="text-danger">
-                    {{ e }}
-                  </b>
-                </template>
-              </div>
-            </div>
-          </form>
-        </div>
       </div>
-      <div class="mt-5">
+      <!-- MODAL DETALLE DE VENTAS -->
+      <div class="container mt-5">
         <h5>Detalle de Venta</h5>
-        <table class="mt-4">
-          <thead>
+        <table class="table table-hover mt-4">
+          <thead class="thead-light">
             <tr>
-              <th></th>
-              <th>Producto</th>
-              <th class="text-center">Cantidad</th>
-              <th>Subtotal</th>
+              <th scope="col"></th>
+              <th scope="col">Producto</th>
+              <th scope="col" class="text-center">Cantidad</th>
+              <th scope="col">Subtotal</th>
             </tr>
           </thead>
           <tbody class="text-secondary">
-            <tr v-for="(row, index) in productRows" :key="index" class="mb-3">
+            <tr v-for="(row, index) in productRows" :key="index" style="margin-top: 10px;">
               <td class="p-2">
-                <svg xmlns="http://www.w3.org/2000/svg" @click="removeProductRow(index)"  class="icon icon-xxl w-75" viewBox="0 0 512 512" role="img">undefined<polygon fill="var(--ci-primary-color, currentColor)" points="348.071 141.302 260.308 229.065 172.545 141.302 149.917 163.929 237.681 251.692 149.917 339.456 172.545 362.083 260.308 274.32 348.071 362.083 370.699 339.456 282.935 251.692 370.699 163.929 348.071 141.302" class="ci-primary"></polygon><path fill="var(--ci-primary-color, currentColor)" d="M425.706,86.294A240,240,0,0,0,86.294,425.706,240,240,0,0,0,425.706,86.294ZM256,464C141.309,464,48,370.691,48,256S141.309,48,256,48s208,93.309,208,208S370.691,464,256,464Z" class="ci-primary"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" @click="removeProductRow(index)" class="icon icon-xxl w-75"
+                  viewBox="0 0 512 512" role="img">
+                  <polygon fill="var(--ci-primary-color, currentColor)"
+                    points="348.071 141.302 260.308 229.065 172.545 141.302 149.917 163.929 237.681 251.692 149.917 339.456 172.545 362.083 260.308 274.32 348.071 362.083 370.699 339.456 282.935 251.692 370.699 163.929 348.071 141.302"
+                    class="ci-primary"></polygon>
+                  <path fill="var(--ci-primary-color, currentColor)"
+                    d="M425.706,86.294A240,240,0,0,0,86.294,425.706,240,240,0,0,0,425.706,86.294ZM256,464C141.309,464,48,370.691,48,256S141.309,48,256,48s208,93.309,208,208S370.691,464,256,464Z"
+                    class="ci-primary"></path>
+                </svg>
               </td>
-              <td>
-                <input v-model="row.description" type="text" class="form-control mb-1 col-form-label p-1 fs-6 fw-bold" placeholder="Producto" />
-                <input v-model="row.details" type="text" class="form-control mb-1 col-form-label p-1 fs-6 fw-bold" placeholder="Precio unitario" />
+              <td class="p-2">
+                <select v-model="row.product_id" class="form-select w-100 form-control mb-1 p-2 fs-6 fw-bold">
+                  <option style="margin: 1px" disabled selected value="">Productos</option>
+                  <option v-for="product in productList" :value="product.id" :key="product.id"
+                    :disabled="isProductSelected(product)">
+                    {{ product.name }}
+                  </option>
+                </select>
+                <input v-model="row.unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
+                  placeholder="Precio unitario" />
               </td>
-              <td class="text-center">
+              <td class="text-center p-2">
                 <div class="d-flex justify-content-center">
-                  <input v-model="row.rate" type="number" class="form-control mb-1 col-form-label p-1 fs-6 fw-bold w-25" placeholder="Cant" />
+                  <input v-model="row.amount" type="number" class="form-control mb-1 p-1 fs-6 fw-bold w-50"
+                    placeholder="Cant" />
                 </div>
               </td>
-              <td>
-                <input v-model="row.qty" type="number" class="form-control mb-1 col-form-label p-1 fs-6 fw-bold" placeholder="Subtotal" />
-              </td>
-              <td>
-                <span>{{ row.amount }}</span>
+              <td class="p-2">
+                <input v-model="row.subtotal" type="number" class="form-control mb-1 p-1 fs-6 fw-bold"
+                  placeholder="Subtotal" />
               </td>
             </tr>
           </tbody>
@@ -137,19 +132,6 @@ export default {
   name: 'Venta',
   setup() {
 
-    const userId = ref(null);
-
-    const getUserInfo = async () => {
-      try {
-        const response = await useApi('userProfile');
-        userId.value = response.data.id;
-      } catch (error) {
-        console.error('Error al obtener la información del usuario:', error);
-      }
-    };
-
-    onMounted(getUserInfo);
-
     const formData = ref({
       date: '',
       total: '',
@@ -165,7 +147,8 @@ export default {
       company_id: [],
       employee_id: [],
       customer_id: [],
-      product_id: []
+      product_id: [],
+      products: [],
     });
 
     const errorsClear = () => {
@@ -268,9 +251,7 @@ export default {
       try {
         const { data } = await useApi('product/' + customerId);
         selectedProduct.value = data;
-        console.log(data);
         visibleVerticallyCenteredScrollableDemoEdit.value = true;
-
       } catch (error) {
         console.error('Error fetching customer data:', error);
       }
@@ -362,17 +343,35 @@ export default {
     };
 
     const productRows = ref([
-      { description: '', details: '', rate: '', qty: '', amount: '' },
+      {
+        product_id: '',
+        unit_price: '',
+        amount: '',
+        subtotal: '',
+      }
     ]);
 
     const addProductRow = () => {
-      productRows.value.push({ description: '', details: '', rate: '', qty: '', amount: '' });
+      productRows.value.push(
+        {
+          product_id: '',
+          unit_price: '',
+          amount: '',
+          subtotal: '',
+        }
+      );
+      selectedProduct.value.push('');
     };
 
     const removeProductRow = (index) => {
       if (productRows.value.length > 1) {
         productRows.value.splice(index, 1);
       }
+    };
+
+    //PRODUCTO SELECCIONADA
+    const isProductSelected = (product) => {
+      return productRows.value.some(selectedProduct => selectedProduct.product_id === product.id);
     };
 
     return {
@@ -394,11 +393,10 @@ export default {
       customerList,
       showProducts,
       productList,
-      getUserInfo,
-      userId,
       productRows,
       addProductRow,
-      removeProductRow
+      removeProductRow,
+      isProductSelected
     };
   }
 }
