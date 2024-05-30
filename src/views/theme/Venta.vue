@@ -87,14 +87,14 @@
                 </svg>
               </td>
               <td class="p-2">
-                <select v-model="row.product_id" class="form-select w-100 form-control mb-1 p-2 fs-6 fw-bold">
+                <select v-model="row.product_id" @change="selectPriceUniProduct(index)" class="form-select w-100 form-control mb-1 p-2 fs-6 fw-bold">
                   <option style="margin: 1px" disabled selected value="">Productos</option>
                   <option v-for="product in productList" :value="product.id" :key="product.id"
                     :disabled="isProductSelected(product)">
                     {{ product.name }}
                   </option>
                 </select>
-                <input v-model="row.unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
+                <input v-model="row.product_unit_priceunit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
                   placeholder="Precio unitario" />
               </td>
               <td class="text-center p-2">
@@ -257,32 +257,6 @@ export default {
       }
     };
 
-    const editProduct = async () => {
-      try {
-        const datosActualizados = {
-          company_name: selectedProduct.value.company_name,
-          contact_name: selectedProduct.value.contact_name,
-          address: selectedProduct.value.address,
-          email: selectedProduct.value.email,
-          phone: selectedProduct.value.phone,
-          company_id: selectedProduct.value.company_id,
-        };
-
-        await useApi('product/' + selectedProduct.value.id, 'PUT', datosActualizados);
-
-        Swal.fire({
-          title: 'Éxito!',
-          text: 'Proveedor editada correctamente!',
-          icon: 'success',
-          confirmButtonText: '¡Entendido!',
-        });
-        resetFormData();
-        TableDataApi();
-      } catch (error) {
-        console.error('Error al actualizar el proveedor:', error);
-      }
-    };
-
     const deleteSale = async (customerId) => {
       const result = await Swal.fire({
         title: 'Estas seguro?',
@@ -355,7 +329,8 @@ export default {
       productRows.value.push(
         {
           product_id: '',
-          unit_price: '',
+          product_name: '',
+          product_unit_price: '',
           amount: '',
           subtotal: '',
         }
@@ -374,6 +349,14 @@ export default {
       return productRows.value.some(selectedProduct => selectedProduct.product_id === product.id);
     };
 
+    const selectPriceUniProduct = (index) =>{
+      const id = productRows.value[index].product_id;
+      const result = productList.value.find(product => product.id === id);
+
+      productRows.value[index].product_name = result[0].name;
+      productRows.value[index].product_unit_price = result[0].price;
+    }
+
     return {
       tableData,
       formData,
@@ -387,7 +370,6 @@ export default {
       viewSale,
       selectedProduct,
       createProduct,
-      editProduct,
       deleteSale,
       showCustomer,
       customerList,
@@ -396,7 +378,8 @@ export default {
       productRows,
       addProductRow,
       removeProductRow,
-      isProductSelected
+      isProductSelected,
+      selectPriceUniProduct
     };
   }
 }
