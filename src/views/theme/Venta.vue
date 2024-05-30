@@ -46,15 +46,10 @@
               <!-- CLIENTE -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cliente</label>
-                <select v-model="formData.customer_id" class="form-select" tabindex="1">
-                  <option style="margin: 1px" value="" disabled selected>Cliente</option>
-                  <option :value="customer.id" :key="customer.id" v-for="customer in customerList">{{ customer.name }}
-                  </option>
-                </select>
+                <multiselect v-model="formData.customer_id" :options="customerList" :placeholder="'Seleccionar cliente'" label="name" track-by="id">
+                </multiselect>
                 <template v-if="errors.customer_id.length > 0">
-                  <b :key="e" v-for="e in errors.customer_id" class="text-danger">
-                    {{ e }}
-                  </b>
+                  <b :key="e" v-for="e in errors.customer_id" class="text-danger">{{ e }}</b>
                 </template>
               </div>
             </div>
@@ -127,9 +122,15 @@ import { ref, onMounted } from 'vue';
 import { useApi } from '../../composables/use-api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.css';
 
 export default {
   name: 'Venta',
+
+  components: {
+    Multiselect,
+  },
   setup() {
 
     const formData = ref({
