@@ -55,6 +55,21 @@
             </div>
           </form>
         </div>
+        <div class="col-md-6">
+          <form class="text-start">
+            <div class="form">
+              <!-- PRODUCTO -->
+              <div id="inventario-company_id" class="field-wrapper input mt-2">
+                <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Producto</label>
+                <multiselect v-model="formData.product_id" :options="productList" :placeholder="'Seleccionar producto'" label="name" track-by="id" @input="addProductDetailRow">
+                </multiselect>
+                <template v-if="errors.product_id.length > 0">
+                  <b :key="e" v-for="e in errors.product_id" class="text-danger">{{ e }}</b>
+                </template>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
       <!-- MODAL DETALLE DE VENTAS -->
       <div class="container mt-5">
@@ -326,17 +341,21 @@ export default {
       }
     ]);
 
-    const addProductRow = () => {
-      productRows.value.push(
-        {
-          product_id: '',
-          product_name: '',
-          product_unit_price: '',
-          amount: '',
-          subtotal: '',
-        }
-      );
-      selectedProduct.value.push('');
+    const addProductDetailRow = (product) => {
+      console.log('Producto seleccionado:', product);
+      const productId = product.id;
+      const selectedProduct = productList.value.find(p => p.id === productId);
+
+      const productExists = productRows.value.some(row => row.product_id === productId);
+      if (productExists) return;
+
+      productRows.value.push({
+        product_id: selectedProduct.id,
+        product_name: selectedProduct.name,
+        product_unit_price: selectedProduct.price,
+        amount: 1,
+        subtotal: selectedProduct.price,
+      });
     };
 
     const removeProductRow = (index) => {
@@ -377,7 +396,7 @@ export default {
       showProducts,
       productList,
       productRows,
-      addProductRow,
+      addProductDetailRow,
       removeProductRow,
       isProductSelected,
       selectPriceUniProduct
