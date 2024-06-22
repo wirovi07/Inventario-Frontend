@@ -354,8 +354,6 @@ export default {
           errors.value[elemento] = mensaje;
         });
       }
-
-      fetchDataFromApi();
     };
 
     const selectedProduct = ref(null);

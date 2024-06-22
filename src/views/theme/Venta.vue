@@ -100,13 +100,13 @@
               </td>
               <td class="p-2">
                 <select v-model="row.product_id" @change="selectPriceUniProduct(index)"
-                  class="form-select w-100 form-control mb-1 p-2 fs-6 fw-bold">
-                  <option style="margin: 1px" disabled selected value="">Productos</option>
-                  <option v-for="product in productList" :value="product.id" :key="product.id"
-                    :disabled="isProductSelected(product)">
-                    {{ product.name }}
-                  </option>
-                </select>
+                class="form-select w-100 form-control mb-1 p-2 fs-6 fw-bold" :disabled="row.product_id !== ''">
+                <option style="margin: 1px" disabled selected value="">Productos</option>
+                <option v-for="product in productList" :value="product.id" :key="product.id"
+                  :disabled="isProductSelected(product)">
+                  {{ product.name }}
+                </option>
+              </select>
                 <input v-model="row.product_unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
                   placeholder="Precio unitario" />
               </td>
@@ -259,8 +259,6 @@ export default {
           errors.value[elemento] = mensaje;
         });
       }
-
-      fetchDataFromApi();
     };
 
     const selectedProduct = ref(null);
@@ -367,7 +365,7 @@ export default {
     };
 
     const removeProductRow = (index) => {
-      if (productRows.value.length > 1) {
+      if (productRows.value.length > 0) {
         productRows.value.splice(index, 1);
       }
     };
