@@ -46,7 +46,8 @@
               <!-- CLIENTE -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cliente</label>
-                <multiselect v-model="formData.customer_id" :options="customerList" :placeholder="'Seleccionar cliente'" label="name" track-by="id">
+                <multiselect v-model="formData.customer_id" :options="customerList" :placeholder="'Seleccionar cliente'"
+                  label="name" track-by="id">
                 </multiselect>
                 <template v-if="errors.customer_id.length > 0">
                   <b :key="e" v-for="e in errors.customer_id" class="text-danger">{{ e }}</b>
@@ -61,7 +62,8 @@
               <!-- PRODUCTO -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Producto</label>
-                <multiselect v-model="formData.product_id" :options="productList" :placeholder="'Seleccionar producto'" label="name" track-by="id" @input="addProductDetailRow">
+                <multiselect v-model="formData.product_id" :options="productList" :placeholder="'Seleccionar producto'"
+                  label="name" track-by="id" @select="addProductDetailRow">
                 </multiselect>
                 <template v-if="errors.product_id.length > 0">
                   <b :key="e" v-for="e in errors.product_id" class="text-danger">{{ e }}</b>
@@ -97,14 +99,15 @@
                 </svg>
               </td>
               <td class="p-2">
-                <select v-model="row.product_id" @change="selectPriceUniProduct(index)" class="form-select w-100 form-control mb-1 p-2 fs-6 fw-bold">
+                <select v-model="row.product_id" @change="selectPriceUniProduct(index)"
+                  class="form-select w-100 form-control mb-1 p-2 fs-6 fw-bold">
                   <option style="margin: 1px" disabled selected value="">Productos</option>
                   <option v-for="product in productList" :value="product.id" :key="product.id"
                     :disabled="isProductSelected(product)">
                     {{ product.name }}
                   </option>
                 </select>
-                <input v-model="row.product_unit_priceunit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
+                <input v-model="row.product_unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
                   placeholder="Precio unitario" />
               </td>
               <td class="text-center p-2">
@@ -120,7 +123,6 @@
             </tr>
           </tbody>
         </table>
-        <button @click="addProductRow" class="btn btn-info m-3" type="button">Agregar</button>
       </div>
     </CModalBody>
     <CModalFooter>
@@ -133,7 +135,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useApi } from '../../composables/use-api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
@@ -332,30 +334,36 @@ export default {
       visibleVerticallyCenteredScrollableDemoEdit.value = false;
     };
 
-    const productRows = ref([
-      {
-        product_id: '',
-        unit_price: '',
-        amount: '',
-        subtotal: '',
-      }
-    ]);
+    const productRows = ref([]);
+
+    const calculateSubtotal = (row) => {
+      row.subtotal = row.amount * row.product_unit_price;
+    };
+
+    watch(productRows, (newRows) => {
+      newRows.forEach(row => {
+        watch(() => row.amount, () => calculateSubtotal(row));
+      });
+    }, { deep: true });
 
     const addProductDetailRow = (product) => {
-      console.log('Producto seleccionado:', product);
       const productId = product.id;
       const selectedProduct = productList.value.find(p => p.id === productId);
 
       const productExists = productRows.value.some(row => row.product_id === productId);
       if (productExists) return;
 
-      productRows.value.push({
+      const newRow = {
         product_id: selectedProduct.id,
         product_name: selectedProduct.name,
         product_unit_price: selectedProduct.price,
         amount: 1,
         subtotal: selectedProduct.price,
-      });
+      };
+
+      productRows.value.push(newRow);
+
+      watch(() => newRow.amount, () => calculateSubtotal(newRow));
     };
 
     const removeProductRow = (index) => {
@@ -369,7 +377,7 @@ export default {
       return productRows.value.some(selectedProduct => selectedProduct.product_id === product.id);
     };
 
-    const selectPriceUniProduct = (index) =>{
+    const selectPriceUniProduct = (index) => {
       const id = productRows.value[index].product_id;
       const result = productList.value.find(product => product.id === id);
 
@@ -399,7 +407,8 @@ export default {
       addProductDetailRow,
       removeProductRow,
       isProductSelected,
-      selectPriceUniProduct
+      selectPriceUniProduct,
+      calculateSubtotal
     };
   }
 }
