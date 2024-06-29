@@ -100,13 +100,13 @@
               </td>
               <td class="p-2">
                 <select v-model="row.product_id" @change="selectPriceUniProduct(index)"
-                class="form-select w-100 form-control mb-1 p-2 fs-6 fw-bold" :disabled="row.product_id !== ''">
-                <option style="margin: 1px" disabled selected value="">Productos</option>
-                <option v-for="product in productList" :value="product.id" :key="product.id"
-                  :disabled="isProductSelected(product)">
-                  {{ product.name }}
-                </option>
-              </select>
+                  class="form-select w-100 form-control mb-1 p-2 fs-6 fw-bold" :disabled="row.product_id !== ''">
+                  <option style="margin: 1px" disabled selected value="">Productos</option>
+                  <option v-for="product in productList" :value="product.id" :key="product.id"
+                    :disabled="isProductSelected(product)">
+                    {{ product.name }}
+                  </option>
+                </select>
                 <input v-model="row.product_unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
                   placeholder="Precio unitario" />
               </td>
@@ -159,6 +159,16 @@ export default {
       product_id: ''
     });
 
+    const paramsProducts = ref({
+      date: [],
+      total: [],
+      company_id: [],
+      employee_id: [],
+      customer_id: [],
+      product_id: [],
+      products: [],
+    });
+
     const errors = ref({
       date: [],
       total: [],
@@ -189,6 +199,7 @@ export default {
         customer_id: '',
         product_id: ''
       };
+      productRows.value = []; s
     };
 
     const visible = ref(false);
@@ -227,37 +238,36 @@ export default {
     onMounted(TableDataApi);
 
     const createProduct = async () => {
-      errorsClear();
-
-      let has_error = false;
-      Object.entries(formData.value).forEach((f) => {
-        const elemento = f[0];
-        const value = f[1];
-        if (value == '') {
-          has_error = true;
-          errors.value[elemento] = 'Este campo es obligatorio';
-        }
-      });
-
-      if (has_error) return;
-
       try {
-        await useApi('product', 'POST', formData.value);
+        const productData = {
+          customer_id: formData.value.customer_id,
+          date: formData.value.date,
+          total: formData.value.total,
+          products: productRows.value.map(row => ({
+            product_id: row.product_id,
+            amount: row.amount,
+            product_unit_price: row.product_unit_price,
+            subtotal: row.subtotal,
+          })),
+        };
+
+        await useApi('saledetails', 'POST', productData);
+
         Swal.fire({
-          title: 'Éxito!',
-          text: 'Proveedor creado correctamente!',
+          title: '¡Éxito!',
+          text: 'Detalle de venta creada correctamente.',
           icon: 'success',
           confirmButtonText: '¡Entendido!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.querySelector('[data-bs-dismiss="modal"]').click();
+            resetFormData();
+            window.location.reload();
+          }
         });
-        resetFormData();
-        TableDataApi();
       } catch (error) {
-        const errors_api = error.errors;
-        Object.entries(errors_api).forEach((e) => {
-          const elemento = e[0];
-          const mensaje = e[1];
-          errors.value[elemento] = mensaje;
-        });
+        console.log(error);
+        Swal.fire('¡Error!', 'Ocurrió un error al crear el detalle de venta.', 'error');
       }
     };
 
@@ -406,7 +416,9 @@ export default {
       removeProductRow,
       isProductSelected,
       selectPriceUniProduct,
-      calculateSubtotal
+      calculateSubtotal,
+      paramsProducts,
+      resetFormData
     };
   }
 }
