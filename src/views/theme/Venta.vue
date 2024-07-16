@@ -199,7 +199,7 @@ export default {
         customer_id: '',
         product_id: ''
       };
-      productRows.value = []; s
+      productRows.value = []; 
     };
 
     const visible = ref(false);
@@ -240,13 +240,11 @@ export default {
     const createProduct = async () => {
       try {
         const productData = {
-          customer_id: formData.value.customer_id,
-          date: formData.value.date,
-          total: formData.value.total,
+          sale_id: formData.value.sale_id, 
           products: productRows.value.map(row => ({
             product_id: row.product_id,
             amount: row.amount,
-            product_unit_price: row.product_unit_price,
+            unit_price: row.product_unit_price,
             subtotal: row.subtotal,
           })),
         };
