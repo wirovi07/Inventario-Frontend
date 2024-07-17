@@ -156,7 +156,8 @@ export default {
       company_id: '',
       employee_id: '',
       customer_id: '',
-      product_id: ''
+      product_id: '',
+      sale_id: ''
     });
 
     const paramsProducts = ref({
@@ -167,6 +168,7 @@ export default {
       customer_id: [],
       product_id: [],
       products: [],
+      sale_id: []
     });
 
     const errors = ref({
@@ -177,6 +179,7 @@ export default {
       customer_id: [],
       product_id: [],
       products: [],
+      sale_id: []
     });
 
     const errorsClear = () => {
@@ -186,7 +189,8 @@ export default {
         company_id: [],
         employee_id: [],
         customer_id: [],
-        product_id: []
+        product_id: [],
+        sale_id: []
       };
     };
 
@@ -197,7 +201,8 @@ export default {
         company_id: '',
         employee_id: '',
         customer_id: '',
-        product_id: ''
+        product_id: '',
+        sale_id: ''
       };
       productRows.value = []; 
     };
