@@ -123,6 +123,12 @@
             </tr>
           </tbody>
         </table>
+        <div class="">
+          <div class="d-flex justify-content-end">
+            <h1 class="fs-4 me-3">Total</h1>
+            <input v-model="total" type="number" style="width: 250px;" class="form-control mb-1 p-1 fs-6 fw-bold" placeholder="0" />
+          </div>
+        </div>
       </div>
     </CModalBody>
     <CModalFooter>
@@ -204,7 +210,7 @@ export default {
         product_id: '',
         sale_id: ''
       };
-      productRows.value = []; 
+      productRows.value = [];
     };
 
     const visible = ref(false);
@@ -244,8 +250,19 @@ export default {
 
     const createProduct = async () => {
       try {
+
+        const saleData = {
+          date: new Date(), 
+          total: productRows.value.reduce((acc, row) => acc + row.subtotal, 0),
+          company_id: selectedCompanyId, 
+          employee_id: selectedEmployeeId, 
+          customer_id: selectedCustomerId 
+        };
+
+        const saleResponse = await useApi('sales', 'POST', saleData);
+        const saleId = saleResponse.data.sale_id;
+
         const productData = {
-          sale_id: formData.value.sale_id, 
           products: productRows.value.map(row => ({
             product_id: row.product_id,
             amount: row.amount,
