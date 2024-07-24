@@ -108,17 +108,17 @@
                   </option>
                 </select>
                 <input v-model="row.product_unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
-                  placeholder="Precio unitario" />
+                  placeholder="Precio unitario" readonly />
               </td>
               <td class="text-center p-2">
                 <div class="d-flex justify-content-center">
                   <input v-model="row.amount" type="number" class="form-control mb-1 p-1 fs-6 fw-bold w-50"
-                    placeholder="Cant" />
+                    placeholder="0" />
                 </div>
               </td>
               <td class="p-2">
                 <input v-model="row.subtotal" type="number" class="form-control mb-1 p-1 fs-6 fw-bold"
-                  placeholder="Subtotal" />
+                  placeholder="Subtotal" readonly />
               </td>
             </tr>
           </tbody>
@@ -126,7 +126,8 @@
         <div class="">
           <div class="d-flex justify-content-end">
             <h1 class="fs-4 me-3">Total</h1>
-            <input v-model="total" type="number" style="width: 250px;" class="form-control mb-1 p-1 fs-6 fw-bold" placeholder="0" />
+            <input v-model="formData.total" type="number" style="width: 250px;"
+              class="form-control mb-1 p-1 fs-6 fw-bold" placeholder="0" readonly />
           </div>
         </div>
       </div>
@@ -211,6 +212,7 @@ export default {
         sale_id: ''
       };
       productRows.value = [];
+      total.value = 0;
     };
 
     const visible = ref(false);
@@ -252,11 +254,11 @@ export default {
       try {
 
         const saleData = {
-          date: new Date(), 
+          date: new Date(),
           total: productRows.value.reduce((acc, row) => acc + row.subtotal, 0),
-          company_id: selectedCompanyId, 
-          employee_id: selectedEmployeeId, 
-          customer_id: selectedCustomerId 
+          company_id: selectedCompanyId,
+          employee_id: selectedEmployeeId,
+          customer_id: selectedCustomerId
         };
 
         const saleResponse = await useApi('sales', 'POST', saleData);
@@ -330,7 +332,6 @@ export default {
     };
 
     const customerList = ref([]);
-
     const showCustomer = async () => {
       try {
         const { data } = await useApi('customerAll');
@@ -342,7 +343,6 @@ export default {
     onMounted(showCustomer);
 
     const productList = ref([]);
-
     const showProducts = async () => {
       try {
         const { data } = await useApi('productAll');
@@ -363,14 +363,21 @@ export default {
     };
 
     const productRows = ref([]);
+    const total = ref(0);
 
     const calculateSubtotal = (row) => {
       row.subtotal = row.amount * row.product_unit_price;
+      calculateTotal();
     };
 
-    watch(productRows, (newRows) => {
-      newRows.forEach(row => {
-        watch(() => row.amount, () => calculateSubtotal(row));
+    const calculateTotal = () => {
+      formData.value.total = productRows.value.reduce((acc, row) => acc + (row.subtotal || 0), 0);
+    };
+
+    watch(() => productRows.value, () => {
+      productRows.value.forEach(row => {
+        watch(() => row.amount, () => calculateSubtotal(row), { immediate: true });
+        watch(() => row.product_unit_price, () => calculateSubtotal(row), { immediate: true });
       });
     }, { deep: true });
 
@@ -392,12 +399,14 @@ export default {
       productRows.value.push(newRow);
 
       watch(() => newRow.amount, () => calculateSubtotal(newRow));
+      calculateTotal();
     };
 
     const removeProductRow = (index) => {
       if (productRows.value.length > 0) {
         productRows.value.splice(index, 1);
       }
+      calculateTotal();
     };
 
     //PRODUCTO SELECCIONADA
@@ -437,6 +446,7 @@ export default {
       isProductSelected,
       selectPriceUniProduct,
       calculateSubtotal,
+      calculateTotal,
       paramsProducts,
       resetFormData
     };
