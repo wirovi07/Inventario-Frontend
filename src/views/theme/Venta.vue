@@ -49,6 +49,7 @@
                 <multiselect v-model="formData.customer_id" :options="customerList" :placeholder="'Seleccionar cliente'"
                   label="name" track-by="id">
                 </multiselect>
+                {{ formData.customer_id }}
                 <template v-if="errors.customer_id.length > 0">
                   <b :key="e" v-for="e in errors.customer_id" class="text-danger">{{ e }}</b>
                 </template>
@@ -250,21 +251,34 @@ export default {
     };
     onMounted(TableDataApi);
 
-    const createProduct = async () => {
+    const createProduct = async () => {      
       try {
+        const formatDateTime = (date) => {
+          const pad = (num) => num.toString().padStart(2, '0');
+          const year = date.getFullYear();
+          const month = pad(date.getMonth() + 1);
+          const day = pad(date.getDate());
+          const hours = pad(date.getHours());
+          const minutes = pad(date.getMinutes());
+          const seconds = pad(date.getSeconds());
+          return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        };
+
+        const calculatedTotal = productRows.value.reduce((acc, row) => acc + (row.subtotal || 0), 0);
 
         const saleData = {
-          date: new Date(),
-          total: productRows.value.reduce((acc, row) => acc + row.subtotal, 0),
-          company_id: selectedCompanyId,
-          employee_id: selectedEmployeeId,
-          customer_id: selectedCustomerId
+          date: formatDateTime(new Date()),
+          total: calculatedTotal,
+          customer_id: formData.customer_id
         };
+
+        console.log('Sending sale data:', saleData); 
 
         const saleResponse = await useApi('sales', 'POST', saleData);
         const saleId = saleResponse.data.sale_id;
 
         const productData = {
+          sale_id: saleId, 
           products: productRows.value.map(row => ({
             product_id: row.product_id,
             amount: row.amount,
@@ -272,6 +286,8 @@ export default {
             subtotal: row.subtotal,
           })),
         };
+
+        console.log('Sending product data:', productData); // Log para depuración
 
         await useApi('saledetails', 'POST', productData);
 
@@ -288,7 +304,7 @@ export default {
           }
         });
       } catch (error) {
-        console.log(error);
+        console.error('Error en createProduct:', error);
         Swal.fire('¡Error!', 'Ocurrió un error al crear el detalle de venta.', 'error');
       }
     };
