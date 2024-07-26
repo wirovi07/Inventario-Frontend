@@ -46,9 +46,9 @@
               <!-- CLIENTE -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cliente</label>
-                <select class="form-control" v-model="formData.customer_id" :placeholder="'Seleccionar cliente'"
-                  label="name" track-by="id">
-                  <option v-for="customer in customerList" :value="customer.id">{{customer.name}}</option>
+                <select class="form-control" v-model="formData.customer_id">
+                  <option value="" selected disabled>Seleccione un cliente</option>
+                  <option v-for="customer in customerList" :value="customer.id" :key="customer.id">{{customer.name}}</option>
                 </select>
                 <template v-if="errors.customer_id.length > 0">
                   <b :key="e" v-for="e in errors.customer_id" class="text-danger">{{ e }}</b>
@@ -63,9 +63,10 @@
               <!-- PRODUCTO -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Producto</label>
-                <multiselect v-model="formData.product_id" :options="productList" :placeholder="'Seleccionar producto'"
-                  label="name" track-by="id" @select="addProductDetailRow">
-                </multiselect>
+                <select class="form-control" v-model="formData.product_id" @change="addProductDetailRow">
+                  <option value="" selected disabled>Seleccione un producto</option>
+                  <option v-for="product in productList" :value="product.id" :key="product.id">{{product.name}}</option>
+                </select>
                 <template v-if="errors.product_id.length > 0">
                   <b :key="e" v-for="e in errors.product_id" class="text-danger">{{ e }}</b>
                 </template>
@@ -379,12 +380,19 @@ export default {
       });
     }, { deep: true });
 
-    const addProductDetailRow = (product) => {
-      const productId = product.id;
+    const addProductDetailRow = () => {
+      const productId = formData.value.product_id;
       const selectedProduct = productList.value.find(p => p.id === productId);
+      console.log("seleccion producto: ", selectedProduct);
 
       const productExists = productRows.value.some(row => row.product_id === productId);
-      if (productExists) return;
+      console.log("Existente producto: ", productExists);
+      
+      if (productExists){
+        let productItem = productRows.value.find(p => p.product_id === productId);
+        productItem.amount = productItem.amount + 1;
+        return;
+      }
 
       const newRow = {
         product_id: selectedProduct.id,
