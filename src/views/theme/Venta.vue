@@ -46,9 +46,10 @@
               <!-- CLIENTE -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cliente</label>
-                <multiselect v-model="formData.customer_id" :options="customerList" :placeholder="'Seleccionar cliente'"
+                <select class="form-control" v-model="formData.customer_id" :placeholder="'Seleccionar cliente'"
                   label="name" track-by="id">
-                </multiselect>
+                  <option v-for="customer in customerList" :value="customer.id">{{customer.name}}</option>
+                </select>
                 <template v-if="errors.customer_id.length > 0">
                   <b :key="e" v-for="e in errors.customer_id" class="text-danger">{{ e }}</b>
                 </template>
@@ -255,20 +256,9 @@ export default {
       try {
         const calculatedTotal = productRows.value.reduce((acc, row) => acc + (row.subtotal || 0), 0);
 
-        const saleData = {
+        const data = {
           total: calculatedTotal,
-          customer_id: { id: formData.value.customer_id }, 
-          company_id: formData.value.company_id,  // Añadir company_id
-          employee_id: formData.value.employee_id // Añadir employee_id
-        };
-
-        console.log('Sending sale data:', saleData);
-
-        const saleResponse = await useApi('sales', 'POST', saleData);
-        const saleId = saleResponse.data.sale_id;
-
-        const productData = {
-          sale_id: saleId,
+          customer_id: formData.value.customer_id, 
           products: productRows.value.map(row => ({
             product_id: row.product_id,
             amount: row.amount,
@@ -277,9 +267,7 @@ export default {
           })),
         };
 
-        console.log('Sending product data:', productData);
-
-        await useApi('saledetails', 'POST', productData);
+        const saleResponse = await useApi('sales', 'POST', data);
 
         Swal.fire({
           title: '¡Éxito!',
