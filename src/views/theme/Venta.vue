@@ -49,7 +49,6 @@
                 <multiselect v-model="formData.customer_id" :options="customerList" :placeholder="'Seleccionar cliente'"
                   label="name" track-by="id">
                 </multiselect>
-                {{ formData.customer_id }}
                 <template v-if="errors.customer_id.length > 0">
                   <b :key="e" v-for="e in errors.customer_id" class="text-danger">{{ e }}</b>
                 </template>
@@ -143,7 +142,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useApi } from '../../composables/use-api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
@@ -157,7 +156,6 @@ export default {
     Multiselect,
   },
   setup() {
-
     const formData = ref({
       date: '',
       total: '',
@@ -223,6 +221,7 @@ export default {
 
     const tableData = ref([]);
 
+    //MOSTRAR DATOS EN LA TABLA 
     const TableDataApi = async () => {
       try {
         const { data } = await useApi('sale');
@@ -251,34 +250,25 @@ export default {
     };
     onMounted(TableDataApi);
 
-    const createProduct = async () => {      
+    // //CREAR VENTA Y DETALLE DE VENTA
+    const createProduct = async () => {
       try {
-        const formatDateTime = (date) => {
-          const pad = (num) => num.toString().padStart(2, '0');
-          const year = date.getFullYear();
-          const month = pad(date.getMonth() + 1);
-          const day = pad(date.getDate());
-          const hours = pad(date.getHours());
-          const minutes = pad(date.getMinutes());
-          const seconds = pad(date.getSeconds());
-          return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        };
-
         const calculatedTotal = productRows.value.reduce((acc, row) => acc + (row.subtotal || 0), 0);
 
         const saleData = {
-          date: formatDateTime(new Date()),
           total: calculatedTotal,
-          customer_id: formData.customer_id
+          customer_id: { id: formData.value.customer_id }, 
+          company_id: formData.value.company_id,  // Añadir company_id
+          employee_id: formData.value.employee_id // Añadir employee_id
         };
 
-        console.log('Sending sale data:', saleData); 
+        console.log('Sending sale data:', saleData);
 
         const saleResponse = await useApi('sales', 'POST', saleData);
         const saleId = saleResponse.data.sale_id;
 
         const productData = {
-          sale_id: saleId, 
+          sale_id: saleId,
           products: productRows.value.map(row => ({
             product_id: row.product_id,
             amount: row.amount,
@@ -287,7 +277,7 @@ export default {
           })),
         };
 
-        console.log('Sending product data:', productData); // Log para depuración
+        console.log('Sending product data:', productData);
 
         await useApi('saledetails', 'POST', productData);
 
@@ -309,8 +299,9 @@ export default {
       }
     };
 
-    const selectedProduct = ref(null);
 
+    //VISUALIZAR DATOS
+    const selectedProduct = ref(null);
     const viewSale = async (customerId) => {
       try {
         const { data } = await useApi('product/' + customerId);
@@ -321,6 +312,7 @@ export default {
       }
     };
 
+    //ELIMINAR 
     const deleteSale = async (customerId) => {
       const result = await Swal.fire({
         title: 'Estas seguro?',
@@ -369,6 +361,8 @@ export default {
     };
     onMounted(showProducts);
 
+
+    //ABRIR Y CERRAR EL MODAL
     const closeModalAndResetFormData = () => {
       visibleVerticallyCenteredScrollableDemo.value = false;
       resetFormData();
@@ -464,7 +458,7 @@ export default {
       calculateSubtotal,
       calculateTotal,
       paramsProducts,
-      resetFormData
+      resetFormData,
     };
   }
 }
