@@ -17,14 +17,14 @@
     </CTableHead>
     <CTableBody>
       <CTableRow v-for="(row, index) in tableData" :key="index">
-        <CTableDataCell>{{ row.id }}</CTableDataCell> <!-- Mostrar consecutivo -->
+        <CTableDataCell>{{ row.id }}</CTableDataCell>
         <CTableDataCell>{{ row.company }}</CTableDataCell>
         <CTableDataCell>{{ row.employ }}</CTableDataCell>
         <CTableDataCell>{{ row.customer }}</CTableDataCell>
         <CTableDataCell>{{ row.date }}</CTableDataCell>
         <CTableDataCell>{{ row.total }}</CTableDataCell>
         <CTableDataCell>
-          <CButton color="primary" class="mb-4" @click="handleEdit(row)">
+          <CButton color="primary" class="mb-4" @click="handleEdit(row.realId)">
             Editar
           </CButton>
           <CButton color="danger" size="sm" @click="deleteSale(row.realId)">Eliminar</CButton>
@@ -148,7 +148,7 @@
   <CModal alignment="center" size="lg" scrollable :visible="visibleEdit"
     @close="closeModalAndResetFormData" aria-labelledby="VerticallyCenteredExample2">
     <CModalHeader>
-      <CModalTitle id="VerticallyCenteredExample2">Crear Detalle de la Venta</CModalTitle>
+      <CModalTitle id="VerticallyCenteredExample2">Editar Detalle de la Venta</CModalTitle>
     </CModalHeader>
     <CModalBody>
       <div class="row">
@@ -361,6 +361,8 @@ export default {
           total: formatterTotal.format(item.total),
         }));
 
+        console.log("ID de SALE", mappedData)
+
         tableData.value = mappedData;
       } catch (error) {
         console.error('Error fetching data from API:', error);
@@ -418,10 +420,9 @@ export default {
 
     // EDITAR
     const saleViewEdit = async (sale) => {
-        const { data, message } = await useApi('salesShowForEdit/' + sale.id);
-
+        const { data, message } = await useApi('salesShowForEdit/' + sale);
+      
         if (message == 'Sale found') {
-            formData.value.date = data.date;
             formData.value.total = data.total;
             formData.value.customer_id = data.customer_id;
             formData.value.amount = data.amount;
@@ -486,7 +487,6 @@ export default {
       }
     };
     onMounted(showProducts);
-
 
     //ABRIR Y CERRAR EL MODAL
     const closeModalAndResetFormData = () => {
