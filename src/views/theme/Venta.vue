@@ -67,7 +67,8 @@
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Producto</label>
                 <select class="form-control" v-model="formData.product_id" @change="addProductDetailRow">
                   <option value="" selected disabled>Seleccione un producto</option>
-                  <option v-for="product in productList" :value="product.id" :key="product.id">{{ product.name }}</option>
+                  <option v-for="product in productList" :value="product.id" :key="product.id">{{ product.name }}
+                  </option>
                 </select>
                 <template v-if="errors.product_id.length > 0">
                   <b :key="e" v-for="e in errors.product_id" class="text-danger">{{ e }}</b>
@@ -145,8 +146,8 @@
   </CModal>
 
   <!-- EDITAR PRODUCTO -->
-  <CModal alignment="center" size="lg" scrollable :visible="visibleEdit"
-    @close="closeModalAndResetFormData" aria-labelledby="VerticallyCenteredExample2">
+  <CModal alignment="center" size="lg" scrollable :visible="visibleEdit" @close="closeModalAndResetFormData"
+    aria-labelledby="VerticallyCenteredExample2">
     <CModalHeader>
       <CModalTitle id="VerticallyCenteredExample2">Editar Detalle de la Venta</CModalTitle>
     </CModalHeader>
@@ -160,7 +161,8 @@
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Cliente</label>
                 <select class="form-control" v-model="formData.customer_id">
                   <option value="" selected disabled>Seleccione un cliente</option>
-                  <option v-for="customer in customerList" :value="customer.id" :key="customer.id">{{ customer.name }}
+                  <option v-for="customer in customerList" :value="customer.id" :key="customer.id">
+                    {{ customer.name }}
                   </option>
                 </select>
                 <template v-if="errors.customer_id.length > 0">
@@ -178,7 +180,8 @@
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Producto</label>
                 <select class="form-control" v-model="formData.product_id" @change="addProductDetailRow">
                   <option value="" selected disabled>Seleccione un producto</option>
-                  <option v-for="product in productList" :value="product.id" :key="product.id">{{ product.name }}</option>
+                  <option v-for="product in productList" :value="product.id" :key="product.id">{{ product.name }}
+                  </option>
                 </select>
                 <template v-if="errors.product_id.length > 0">
                   <b :key="e" v-for="e in errors.product_id" class="text-danger">{{ e }}</b>
@@ -201,7 +204,7 @@
             </tr>
           </thead>
           <tbody class="text-secondary">
-            <tr v-for="(row, index) in productRows" :key="index" style="margin-top: 10px;">
+            <tr v-for="(row, index) in productEdit" :key="index" style="margin-top: 10px;">
               <td class="p-2">
                 <svg xmlns="http://www.w3.org/2000/svg" @click="removeProductRow(index)" class="icon icon-xxl w-75"
                   viewBox="0 0 512 512" role="img">
@@ -222,7 +225,7 @@
                     {{ product.name }}
                   </option>
                 </select>
-                <input v-model="row.product_unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
+                <input v-model="row.unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
                   placeholder="Precio unitario" readonly />
               </td>
               <td class="text-center p-2">
@@ -267,9 +270,6 @@ import 'vue-multiselect/dist/vue-multiselect.css';
 export default {
   name: 'Venta',
 
-  components: {
-    Multiselect,
-  },
   setup() {
     const formData = ref({
       date: '',
@@ -277,6 +277,7 @@ export default {
       company_id: '',
       employee_id: '',
       customer_id: '',
+      customer: '',
       product_id: '',
       sale_id: ''
     });
@@ -287,6 +288,7 @@ export default {
       company_id: [],
       employee_id: [],
       customer_id: [],
+      customer: [],
       product_id: [],
       products: [],
       sale_id: []
@@ -298,6 +300,7 @@ export default {
       company_id: [],
       employee_id: [],
       customer_id: [],
+      customer: [],
       product_id: [],
       products: [],
       sale_id: []
@@ -310,6 +313,7 @@ export default {
         company_id: [],
         employee_id: [],
         customer_id: [],
+        customer: [],
         product_id: [],
         sale_id: []
       };
@@ -322,13 +326,14 @@ export default {
         company_id: '',
         employee_id: '',
         customer_id: '',
+        customer: '',
         product_id: '',
         sale_id: ''
       };
       productRows.value = [];
       total.value = 0;
     };
-    
+
     const visible = ref(false);
 
     const visibleVerticallyCenteredScrollableDemo = ref(false);
@@ -419,22 +424,23 @@ export default {
     };
 
     // EDITAR
+    const productEdit = ref([]);
     const saleViewEdit = async (sale) => {
-        const { data, message } = await useApi('salesShowForEdit/' + sale);
-      
-        if (message == 'Sale found') {
-            formData.value.total = data.total;
-            formData.value.customer_id = data.customer_id;
-            formData.value.amount = data.amount;
-            formData.value.unit_price = data.unit_price;
-            formData.value.subtotal = data.observation;
-            formData.value.sale_id = data.sale_id;
-            formData.value.product_id = data.product_id;
-        }
-        console.log("salesShowForEdit: ", data);
+      const { data, message } = await useApi('salesShowForEdit/' + sale);
+
+      if (message == 'Sale found') {
+        formData.value.total = data.detail.total;
+        formData.value.customer_id = data.sale.customer_id;
+        formData.value.amount = data.detail.amount;
+        formData.value.unit_price = data.detail.unit_price;
+        formData.value.subtotal = data.detail.observation;
+        formData.value.sale_id = data.sale.sale_id;
+      }
+      console.log("salesShowForEdit: ", data);
+      productEdit.value = data.detail;
     };
 
-    const handleEdit = (row) =>{
+    const handleEdit = (row) => {
       visibleEdit.value = true;
       saleViewEdit(row);
     }
@@ -596,7 +602,8 @@ export default {
       calculateTotal,
       paramsProducts,
       resetFormData,
-      handleEdit
+      handleEdit,
+      productEdit
     };
   }
 }
