@@ -178,7 +178,7 @@
               <!-- PRODUCTO -->
               <div id="inventario-company_id" class="field-wrapper input mt-2">
                 <label for="fullname" class="col-form-label p-1 fs-6 fw-bold">Producto</label>
-                <select class="form-control" v-model="formData.product_id" @change="addProductDetailRow">
+                <select class="form-control" v-model="formData.product_id" @change="addProductDetailEdit">
                   <option value="" selected disabled>Seleccione un producto</option>
                   <option v-for="product in productList" :value="product.id" :key="product.id">{{ product.name }}
                   </option>
@@ -191,7 +191,7 @@
           </form>
         </div>
       </div>
-      <!-- MODAL DETALLE DE VENTAS -->
+      <!-- MODAL DETALLE DE VENTAS EDITAR-->
       <div class="container mt-5">
         <h5>Detalle de Venta</h5>
         <table class="table table-hover mt-4">
@@ -264,7 +264,6 @@ import { ref, onMounted, watch, computed } from 'vue';
 import { useApi } from '../../composables/use-api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
-import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
 
 export default {
@@ -331,6 +330,7 @@ export default {
         sale_id: ''
       };
       productRows.value = [];
+      productEdit.value = [];
       total.value = 0;
     };
 
@@ -365,8 +365,6 @@ export default {
           date: item.date,
           total: formatterTotal.format(item.total),
         }));
-
-        console.log("ID de SALE", mappedData)
 
         tableData.value = mappedData;
       } catch (error) {
@@ -472,6 +470,7 @@ export default {
       }
     };
 
+    //MOSTRAR CLIENTE
     const customerList = ref([]);
     const showCustomer = async () => {
       try {
@@ -483,6 +482,7 @@ export default {
     };
     onMounted(showCustomer);
 
+    //MOSTRAR PRODUCTO
     const productList = ref([]);
     const showProducts = async () => {
       try {
@@ -553,6 +553,35 @@ export default {
       calculateTotal();
     };
 
+    const addProductDetailEdit = () => {
+      const productId = formData.value.product_id;
+      const selectedProduct = productList.value.find(p => p.id === productId);
+      console.log("seleccion producto: ", selectedProduct);
+
+      const productExists = productEdit.value.some(row => row.product_id === productId);
+      console.log("Existente producto: ", productExists);
+
+      if (productExists) {
+        let productItem = productEdit.value.find(p => p.product_id === productId);
+        productItem.amount = productItem.amount + 1;
+        return;
+      }
+
+      const newRow = {
+        product_id: selectedProduct.id,
+        product_name: selectedProduct.name,
+        product_unit_price: selectedProduct.price,
+        amount: 1,
+        subtotal: selectedProduct.price,
+      };
+
+      productEdit.value.push(newRow);
+
+      watch(() => newRow.amount, () => calculateSubtotal(newRow));
+      calculateTotal();
+    };
+
+
     const removeProductRow = (index) => {
       if (productRows.value.length > 0) {
         productRows.value.splice(index, 1);
@@ -571,6 +600,14 @@ export default {
 
       productRows.value[index].product_name = result[0].name;
       productRows.value[index].product_unit_price = result[0].price;
+    }
+
+    const selectPriceUniProductEdit = (index) => {
+      const id = productEdit.value[index].product_id;
+      const result = productList.value.find(product => product.id === id);
+
+      productEdit.value[index].product_name = result[0].name;
+      productEdit.value[index].product_unit_price = result[0].price;
     }
 
     return {
@@ -595,9 +632,11 @@ export default {
       productList,
       productRows,
       addProductDetailRow,
+      addProductDetailEdit,
       removeProductRow,
       isProductSelected,
       selectPriceUniProduct,
+      selectPriceUniProductEdit,
       calculateSubtotal,
       calculateTotal,
       paramsProducts,
