@@ -24,10 +24,8 @@
         <CTableDataCell>{{ row.date }}</CTableDataCell>
         <CTableDataCell>{{ row.total }}</CTableDataCell>
         <CTableDataCell>
-          <CButton color="primary" class="mb-4" @click="handleEdit(row.realId)">
-            Editar
-          </CButton>
-          <CButton color="danger" size="sm" @click="deleteSale(row.realId)">Eliminar</CButton>
+          <CButton color="primary" size="sm" class="mb-4" @click="handleEdit(row.realId)">Editar</CButton>
+          <CButton color="danger" size="sm" class="mb-4" @click="deleteSale(row.realId)">Eliminar</CButton>
         </CTableDataCell>
       </CTableRow>
     </CTableBody>
