@@ -206,7 +206,7 @@
           <tbody class="text-secondary">
             <tr v-for="(row, index) in productEdit" :key="index" style="margin-top: 10px;">
               <td class="p-2">
-                <svg xmlns="http://www.w3.org/2000/svg" @click="removeProductRow(index)" class="icon icon-xxl w-75"
+                <svg xmlns="http://www.w3.org/2000/svg" @click="removeProductEdit(index)" class="icon icon-xxl w-75"
                   viewBox="0 0 512 512" role="img">
                   <polygon fill="var(--ci-primary-color, currentColor)"
                     points="348.071 141.302 260.308 229.065 172.545 141.302 149.917 163.929 237.681 251.692 149.917 339.456 172.545 362.083 260.308 274.32 348.071 362.083 370.699 339.456 282.935 251.692 370.699 163.929 348.071 141.302"
@@ -225,7 +225,7 @@
                     {{ product.name }}
                   </option>
                 </select>
-                <input v-model="row.unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
+                <input v-model="row.product_unit_price" type="text" class="form-control mb-1 p-2 fs-6 fw-bold"
                   placeholder="Precio unitario" readonly />
               </td>
               <td class="text-center p-2">
@@ -254,13 +254,13 @@
       <CButton color="secondary" @click="closeModalAndResetFormData">
         Descartar
       </CButton>
-      <CButton color="primary" @click="createProduct" tabindex="12">Crear</CButton>
+      <CButton color="primary" @click="editProduct" tabindex="12">Editar</CButton>
     </CModalFooter>
   </CModal>
 </template>
 
 <script>
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useApi } from '../../composables/use-api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
@@ -373,7 +373,7 @@ export default {
     };
     onMounted(TableDataApi);
 
-    // //CREAR VENTA Y DETALLE DE VENTA
+    // //CREAR VENTA
     const createProduct = async () => {
       try {
         const calculatedTotal = productRows.value.reduce((acc, row) => acc + (row.subtotal || 0), 0);
@@ -389,7 +389,7 @@ export default {
           })),
         };
 
-        const saleResponse = await useApi('sales', 'POST', data);
+        await useApi('sales', 'POST', data);
 
         Swal.fire({
           title: '¡Éxito!',
@@ -421,8 +421,9 @@ export default {
       }
     };
 
-    // EDITAR
+    // EDITAR VENTA
     const productEdit = ref([]);
+
     const saleViewEdit = async (sale) => {
       const { data, message } = await useApi('salesShowForEdit/' + sale);
 
@@ -430,12 +431,47 @@ export default {
         formData.value.total = data.detail.total;
         formData.value.customer_id = data.sale.customer_id;
         formData.value.amount = data.detail.amount;
-        formData.value.unit_price = data.detail.unit_price;
+        formData.value.product_unit_price = data.detail.product_unit_price;
         formData.value.subtotal = data.detail.observation;
         formData.value.sale_id = data.sale.sale_id;
       }
       console.log("salesShowForEdit: ", data);
       productEdit.value = data.detail;
+    };
+
+    const editProduct = async (id) => {
+      try {
+        const calculatedTotalEdit = productEdit.value.reduce((acc, row) => acc + (row.subtotal || 0), 0);
+
+        const data = {
+          total: calculatedTotalEdit,
+          customer_id: formData.value.customer_id,
+          products: productEdit.value.map(row => ({
+            product_id: row.product_id,
+            amount: row.amount,
+            unit_price: row.product_unit_price,
+            subtotal: row.subtotal,
+          })),
+        };
+
+        await useApi('sale/' + sale_id, 'PUT', data);
+
+        Swal.fire({
+          title: '¡Éxito!',
+          text: 'Detalle de venta actualizada correctamente.',
+          icon: 'success',
+          confirmButtonText: '¡Entendido!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            document.querySelector('[data-bs-dismiss="modal"]').click();
+            resetFormData();
+            window.location.reload();
+          }
+        });
+      } catch (error) {
+        console.error('Error en editProduct:', error);
+        Swal.fire('¡Error!', 'Ocurrió un error al actualizar el detalle de venta.', 'error');
+      }
     };
 
     const handleEdit = (row) => {
@@ -509,6 +545,7 @@ export default {
     const productRows = ref([]);
     const total = ref(0);
 
+    //TOTAL Y SUBTOTAL DE CREAR
     const calculateSubtotal = (row) => {
       row.subtotal = row.amount * row.product_unit_price;
       calculateTotal();
@@ -528,10 +565,8 @@ export default {
     const addProductDetailRow = () => {
       const productId = formData.value.product_id;
       const selectedProduct = productList.value.find(p => p.id === productId);
-      console.log("seleccion producto: ", selectedProduct);
 
       const productExists = productRows.value.some(row => row.product_id === productId);
-      console.log("Existente producto: ", productExists);
 
       if (productExists) {
         let productItem = productRows.value.find(p => p.product_id === productId);
@@ -553,17 +588,32 @@ export default {
       calculateTotal();
     };
 
+    //TOTAL Y SUBTOTAL DE EDITAR
+    const calculateSubtotalEdit = (row) => {
+      row.subtotal = row.amount * row.product_unit_price;
+      calculateTotalEdit();
+    };
+
+    const calculateTotalEdit = () => {
+      formData.value.total = productEdit.value.reduce((acc, row) => acc + (row.subtotal || 0), 0);
+    };
+
+    watch(() => productEdit.value, () => {
+      productEdit.value.forEach(row => {
+        watch(() => row.amount, () => calculateSubtotalEdit(row), { immediate: true });
+        watch(() => row.product_unit_price, () => calculateSubtotalEdit(row), { immediate: true });
+      });
+    }, { deep: true });
+
     const addProductDetailEdit = () => {
       const productId = formData.value.product_id;
       const selectedProduct = productList.value.find(p => p.id === productId);
-      console.log("seleccion producto: ", selectedProduct);
 
       const productExists = productEdit.value.some(row => row.product_id === productId);
-      console.log("Existente producto: ", productExists);
 
       if (productExists) {
         let productItem = productEdit.value.find(p => p.product_id === productId);
-        productItem.amount = productItem.amount + 1;
+        productItem.amount = parseInt(productItem.amount) + 1;
         return;
       }
 
@@ -577,16 +627,23 @@ export default {
 
       productEdit.value.push(newRow);
 
-      watch(() => newRow.amount, () => calculateSubtotal(newRow));
-      calculateTotal();
+      watch(() => newRow.amount, () => calculateSubtotalEdit(newRow));
+      calculateTotalEdit();
     };
 
-
+    //ELIMINAR FORMULARIO CREAR Y EDITAR
     const removeProductRow = (index) => {
       if (productRows.value.length > 0) {
         productRows.value.splice(index, 1);
       }
       calculateTotal();
+    };
+
+    const removeProductEdit = (index) => {
+      if (productEdit.value.length > 0) {
+        productEdit.value.splice(index, 1);
+      }
+      calculateTotalEdit();
     };
 
     //PRODUCTO SELECCIONADA
@@ -634,15 +691,19 @@ export default {
       addProductDetailRow,
       addProductDetailEdit,
       removeProductRow,
+      removeProductEdit,
       isProductSelected,
       selectPriceUniProduct,
       selectPriceUniProductEdit,
       calculateSubtotal,
+      calculateSubtotalEdit,
       calculateTotal,
+      calculateTotalEdit,
       paramsProducts,
       resetFormData,
       handleEdit,
-      productEdit
+      productEdit,
+      editProduct
     };
   }
 }
