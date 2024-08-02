@@ -254,7 +254,7 @@
       <CButton color="secondary" @click="closeModalAndResetFormData">
         Descartar
       </CButton>
-      <CButton color="primary" @click="editProduct" tabindex="12">Editar</CButton>
+      <CButton color="primary" @click="editProduct(formData.sale_id)" tabindex="12">Editar</CButton>
     </CModalFooter>
   </CModal>
 </template>
@@ -373,7 +373,7 @@ export default {
     };
     onMounted(TableDataApi);
 
-    // //CREAR VENTA
+    //CREAR VENTA
     const createProduct = async () => {
       try {
         const calculatedTotal = productRows.value.reduce((acc, row) => acc + (row.subtotal || 0), 0);
@@ -423,7 +423,6 @@ export default {
 
     // EDITAR VENTA
     const productEdit = ref([]);
-
     const saleViewEdit = async (sale) => {
       const { data, message } = await useApi('salesShowForEdit/' + sale);
 
@@ -435,7 +434,6 @@ export default {
         formData.value.subtotal = data.detail.observation;
         formData.value.sale_id = data.sale.sale_id;
       }
-      console.log("salesShowForEdit: ", data);
       productEdit.value = data.detail;
     };
 
@@ -454,7 +452,7 @@ export default {
           })),
         };
 
-        await useApi('sale/' + sale_id, 'PUT', data);
+        await useApi('sale/' + id, 'PUT', data);
 
         Swal.fire({
           title: '¡Éxito!',
