@@ -24,8 +24,8 @@
         <CTableDataCell>{{ row.date }}</CTableDataCell>
         <CTableDataCell>{{ row.total }}</CTableDataCell>
         <CTableDataCell>
-          <CButton color="primary" size="sm" class="mb-4" @click="handleEdit(row.realId)">Editar</CButton>
-          <CButton color="danger" size="sm" class="mb-4" @click="deleteSale(row.realId)">Eliminar</CButton>
+          <CButton color="primary" size="sm" class="m-1" @click="handleEdit(row.realId)">Editar</CButton>
+          <CButton color="danger" size="sm" class="m-1" @click="deleteSale(row.realId)">Eliminar</CButton>
         </CTableDataCell>
       </CTableRow>
     </CTableBody>
@@ -407,17 +407,6 @@ export default {
       }
     };
 
-    //VISUALIZAR DATOS
-    const selectedProduct = ref(null);
-    const viewSale = async (customerId) => {
-      try {
-        const { data } = await useApi('product/' + customerId);
-        selectedProduct.value = data;
-        visibleVerticallyCenteredScrollableDemoEdit.value = true;
-      } catch (error) {
-        console.error('Error fetching customer data:', error);
-      }
-    };
 
     // EDITAR VENTA
     const productEdit = ref([]);
@@ -476,7 +465,7 @@ export default {
     }
 
     //ELIMINAR 
-    const deleteSale = async (customerId) => {
+    const deleteSale = async (id) => {
       const result = await Swal.fire({
         title: 'Estas seguro?',
         text: '¡No podrás revertir esto!',
@@ -489,11 +478,11 @@ export default {
 
       if (result.isConfirmed) {
         try {
-          await useApi('product/' + customerId, 'DELETE');
+          await useApi('sale/' + id, 'DELETE');
 
-          tableData.value = tableData.value.filter((row) => row.customerId != customerId);
+          tableData.value = tableData.value.filter((row) => row.realId != id);
 
-          Swal.fire('Eliminar!', 'El proveedor ha sido eliminado!.', 'success');
+          Swal.fire('Eliminar!', 'La venta ha sido eliminado!.', 'success');
 
           TableDataApi();
         } catch (error) {
@@ -557,6 +546,9 @@ export default {
         watch(() => row.product_unit_price, () => calculateSubtotal(row), { immediate: true });
       });
     }, { deep: true });
+
+
+    const selectedProduct = ref(null);
 
     const addProductDetailRow = () => {
       const productId = formData.value.product_id;
@@ -675,7 +667,7 @@ export default {
       visibleCenterEdit,
       closeModalAndResetFormData,
       closeModalAndResetFormDataEdit,
-      viewSale,
+      // viewSale,
       selectedProduct,
       createProduct,
       deleteSale,
