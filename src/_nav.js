@@ -47,12 +47,18 @@ export default [
     component: 'CNavItem',
     name: 'Productos',
     to: '/theme/producto',
-    icon: 'cil-grain',
+    icon: 'cilGrain',
   },
   {
     component: 'CNavItem',
     name: 'Ventas',
     to: '/theme/venta',
+    icon: 'cil-graph',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Comprar',
+    to: '/theme/compra',
     icon: 'cil-dollar',
   },
   {

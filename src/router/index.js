@@ -67,6 +67,12 @@ const routes = [
         meta: { required_auth: true },
       }, 
       {
+        path: '/theme/compra',
+        name: 'Compra',
+        component: () => import('@/views/theme/Compra.vue'),
+        meta: { required_auth: true },
+      }, 
+      {
         path: '/theme/typography',
         name: 'Typography',
         component: () => import('@/views/theme/Typography.vue'),
