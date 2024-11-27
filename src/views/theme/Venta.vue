@@ -265,6 +265,7 @@ import Swal from 'sweetalert2';
 import 'vue-multiselect/dist/vue-multiselect.css';
 
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Venta',
 
   setup() {
